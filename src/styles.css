@@ -142,3 +142,416 @@
     color: var(--color-foreground);
   }
 }
+
+:root {
+  --background: oklch(0.13 0.04 258);
+  --foreground: oklch(0.95 0.02 230);
+  --card: oklch(0.17 0.05 255 / 0.75);
+  --card-foreground: oklch(0.95 0.02 230);
+  --primary: oklch(0.72 0.17 235);
+  --primary-foreground: oklch(0.13 0.04 258);
+  --muted: oklch(0.22 0.05 255);
+  --muted-foreground: oklch(0.72 0.05 240);
+  --accent: oklch(0.82 0.14 210);
+  --border: oklch(0.6 0.15 240 / 0.35);
+  --success: oklch(0.8 0.2 145);
+  --warn: oklch(0.8 0.16 75);
+  --danger: oklch(0.65 0.22 25);
+}
+@theme inline {
+  --color-success: var(--success);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --font-sans: "Rajdhani", "Exo 2", system-ui, sans-serif;
+  --font-display: "Orbitron", sans-serif;
+}
+body {
+  background: var(--background);
+  font-family: var(--font-sans);
+  transition: background-color .7s, color .7s;
+}
+@utility panel {
+  position: relative;
+  background:
+    linear-gradient(155deg, color-mix(in oklab, var(--primary) 10%, transparent) 0%, transparent 38%),
+    linear-gradient(180deg, oklch(1 0 0 / 0.05), transparent 30%),
+    var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 0.12),
+    inset 0 0 24px color-mix(in oklab, var(--primary) 16%, transparent),
+    0 0 18px color-mix(in oklab, var(--primary) 22%, transparent),
+    0 18px 40px -18px oklch(0 0 0 / 0.8);
+  backdrop-filter: blur(10px) saturate(1.3);
+  transition: border-color .7s, box-shadow .7s;
+}
+.agent-orb {
+  background: radial-gradient(circle at 35% 30%, color-mix(in oklab, var(--agent) 55%, white 10%), color-mix(in oklab, var(--agent) 18%, var(--background)) 70%);
+  border: 1px solid color-mix(in oklab, var(--agent) 60%, transparent);
+  box-shadow: 0 0 12px color-mix(in oklab, var(--agent) 55%, transparent), inset 0 1px 2px oklch(1 0 0 / .3);
+}
+.agent-bar { background: linear-gradient(90deg, color-mix(in oklab, var(--agent) 60%, transparent), var(--agent)); box-shadow: 0 0 8px var(--agent); }
+.agent-selected { background: color-mix(in oklab, var(--agent) 14%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--agent) 70%, transparent), 0 0 18px color-mix(in oklab, var(--agent) 40%, transparent); }
+@utility glow-text {
+  text-shadow: 0 0 12px color-mix(in oklab, var(--primary) 90%, transparent);
+}
+@utility glow-icon {
+  filter: drop-shadow(0 0 6px color-mix(in oklab, var(--primary) 90%, transparent));
+}
+html { transition: color .7s; }
+
+/* ===== 7D sci-fi layer ===== */
+@keyframes pulse-core { 0%,100% { transform: scale(1); opacity: .9 } 50% { transform: scale(1.04); opacity: 1 } }
+@keyframes stream { from { stroke-dashoffset: 40 } to { stroke-dashoffset: 0 } }
+@keyframes scan { from { transform: translateY(-100%) } to { transform: translateY(100%) } }
+@keyframes holo-in { from { opacity: 0; transform: perspective(900px) rotateX(18deg) translateY(30px) scale(.94); filter: blur(6px) } to { opacity: 1; transform: none; filter: none } }
+@keyframes warp-in { from { opacity: 0; transform: scale(.3); filter: blur(12px) brightness(2) } to { opacity: 1; transform: none; filter: none } }
+@keyframes slide-in { from { opacity: 0; transform: perspective(900px) rotateY(-25deg) translateX(-80px) } to { opacity: 1; transform: none } }
+@keyframes iris-in { from { clip-path: circle(0% at 50% 50%) } to { clip-path: circle(75% at 50% 50%) } }
+@keyframes fade-up { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: none } }
+
+@utility anim-holo { animation: holo-in .55s cubic-bezier(.2,.8,.2,1) both; }
+@utility anim-warp { animation: warp-in .55s cubic-bezier(.2,.8,.2,1) both; }
+@utility anim-slide { animation: slide-in .55s cubic-bezier(.2,.8,.2,1) both; }
+@utility anim-iris { animation: iris-in .6s cubic-bezier(.2,.8,.2,1) both; }
+@utility anim-fade-up { animation: fade-up .4s ease both; }
+@utility core-pulse { animation: pulse-core 3s ease-in-out infinite; }
+@utility data-stream { stroke-dasharray: 4 6; animation: stream 1.2s linear infinite; }
+@utility depth-card {
+  transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s;
+  transform-style: preserve-3d;
+  &:hover { transform: perspective(700px) translateZ(14px) rotateX(4deg); box-shadow: 0 0 22px oklch(0.72 0.17 235 / .45), inset 0 0 18px oklch(0.6 0.18 240 / .25); }
+}
+@utility holo-scan {
+  position: relative; overflow: hidden;
+  &::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(180deg, transparent, oklch(0.82 0.14 210 / .12), transparent);
+    height: 40%; animation: scan 4s linear infinite; }
+}
+
+.core[data-state="listening"] { --core-glow: var(--success); }
+.core[data-state="thinking"] { --core-glow: var(--accent); }
+.core[data-state="executing"] { --core-glow: var(--warn); }
+.core[data-state="verifying"] { --core-glow: var(--primary); }
+.core { --core-glow: var(--primary); }
+.core-aura { box-shadow: 0 0 80px 10px color-mix(in oklab, var(--core-glow) 45%, transparent); transition: box-shadow .5s; }
+.core[data-state="idle"] .data-stream { animation-duration: 3s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+}
+
+/* ===== Advanced states, particles, parallax ===== */
+@keyframes wave { 0%,100% { transform: scaleY(.3) } 50% { transform: scaleY(1) } }
+@keyframes float-up { from { transform: translateY(0); opacity: 0 } 20% { opacity: .8 } to { transform: translateY(-120px); opacity: 0 } }
+@keyframes scan-sweep { from { top: 10% } to { top: 90% } }
+@keyframes shake { 0%,100% { transform: translateX(0) } 25% { transform: translateX(-4px) } 75% { transform: translateX(4px) } }
+@keyframes pop { from { transform: scale(.4); opacity: 0 } to { transform: scale(1); opacity: 1 } }
+@utility wave-bar { animation: wave .9s ease-in-out infinite; transform-origin: center; }
+@utility particle { animation: float-up 6s linear infinite; }
+@utility anim-shake { animation: shake .35s ease 2; }
+@utility anim-pop { animation: pop .4s cubic-bezier(.2,.8,.2,1) both; }
+.core[data-state="completed"] { --core-glow: var(--success); }
+.core[data-state="error"] { --core-glow: var(--danger); }
+.scan-line { position: absolute; left: 15%; right: 15%; height: 2px; background: var(--accent); box-shadow: 0 0 12px var(--accent); animation: scan-sweep 1s ease-in-out infinite alternate; }
+.parallax { transition: transform .3s ease-out; will-change: transform; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.paused *, .paused *::before, .paused *::after { animation-play-state: paused !important; }
+
+/* ===== AYRA avatar ===== */
+@keyframes blink { 0%,92%,100% { transform: scaleY(1) } 95% { transform: scaleY(.1) } }
+@keyframes eye-glow { 0%,100% { opacity: .55 } 50% { opacity: 1 } }
+@keyframes speak { 0%,100% { transform: scaleX(.6) scaleY(.4); opacity: .4 } 50% { transform: scaleX(1) scaleY(1); opacity: .9 } }
+@keyframes ripple { from { transform: scale(.6); opacity: .8 } to { transform: scale(1.5); opacity: 0 } }
+@utility ayra-eye { animation: blink 5s ease-in-out infinite, eye-glow 2.4s ease-in-out infinite; }
+@utility ayra-mouth { animation: speak .28s ease-in-out infinite; }
+@utility ayra-ripple { animation: ripple 2.4s ease-out infinite; }
+.core[data-state="speaking"] { --core-glow: var(--accent); }
+.core[data-state="thinking"] .ayra-eye { animation-duration: 5s, .6s; }
+
+/* Layout-only dashboard positioning; appearance tokens remain unchanged. */
+.dashboard-header { grid-template-columns: auto minmax(0, 1fr) auto; }
+.header-brand { grid-column: 2; }
+.header-actions { grid-column: 1 / -1; justify-content: flex-end; }
+.header-search { grid-column: 1 / -1; grid-row: 3; }
+.dashboard-nav { max-width: 100%; overflow-x: auto; padding: 4px 0 8px; }
+.dashboard-hero { display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; gap: 12px; }
+.hero-avatar { height: 340px; overflow: hidden; }
+.hero-streams > div { min-width: 0; }
+.hero-streams > div > .panel { width: 100%; }
+.dashboard-command { grid-template-columns: 48px minmax(0, 1fr) 48px; }
+.dashboard-command > button:first-child { width: 48px; height: 48px; grid-column: 1; grid-row: 1; }
+.dashboard-command > input { grid-column: 2; grid-row: 1; }
+.dashboard-command > button:last-child { grid-column: 3; grid-row: 1; }
+.command-shortcut { grid-row: 2; }
+.dashboard-command { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.dashboard-command > input { grid-column: 2 / 4; }
+.dashboard-command > button:last-child { grid-column: 4; justify-self: end; }
+.dashboard-overview > *, .dashboard-secondary > *, .dashboard-secondary .panel { min-width: 0; }
+.agent-progress { width: 48px; }
+.paused [role="dialog"], .paused [role="dialog"] * { animation-play-state: running !important; }
+@media (max-width: 359px) {
+  .header-actions { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; }
+  .header-actions > div:last-child { grid-column: 1 / -1; justify-self: end; }
+}
+@media (min-width: 640px) {
+  .dashboard-header { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .header-actions { grid-column: 3; grid-row: 1; }
+  .header-search { grid-row: 2; }
+  .dashboard-command { grid-template-columns: 56px minmax(0, 1fr) repeat(4, 48px) 48px; }
+  .dashboard-command > button:first-child { width: 56px; height: 56px; }
+  .dashboard-command > input { grid-column: 2; }
+  .command-shortcut { grid-row: 1; }
+  .dashboard-command > button:last-child { grid-column: 7; }
+}
+@media (min-width: 768px) {
+  .dashboard-hero { grid-template-columns: minmax(160px, .8fr) minmax(0, 1.2fr); }
+  .hero-avatar { height: 380px; }
+  .hero-streams { grid-column: 1 / -1; }
+  .hero-streams > div { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hero-streams > div > div:first-child { grid-column: 1 / -1; }
+  .agent-progress { width: 64px; }
+}
+@media (min-width: 1024px) {
+  .dashboard-header { grid-template-columns: auto auto minmax(0, 1fr) auto; }
+  .header-search { grid-column: 3; grid-row: 1; }
+  .header-actions { grid-column: 4; }
+  .dashboard-nav { overflow: visible; padding: 0; }
+  .dashboard-hero { grid-template-columns: minmax(150px, .7fr) minmax(240px, 1.2fr) minmax(250px, 1fr); min-height: 380px; }
+  .hero-streams { grid-column: 3; }
+  .hero-streams > div { display: flex; }
+}
+@media (min-width: 1280px) {
+  .dashboard-main > .dashboard-stats { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .dashboard-stats > .panel { gap: 8px; padding: 10px; }
+  .dashboard-stats > .panel > div:first-child { width: 36px; height: 44px; }
+}
+@media (max-width: 639px) {
+  .header-actions { justify-content: space-between; gap: 8px; }
+  .status-layout { grid-template-columns: minmax(0, 1fr) 72px; }
+  .dashboard-command { border-radius: 28px; }
+  .dashboard-command > input { width: 100%; }
+  .dashboard-secondary .analytics-layout { grid-template-columns: minmax(0, 1fr) minmax(110px, .8fr); }
+}
+
+/* AYRA cinematic presentation, scoped to the existing hero only. */
+:root {
+  --ayra-scene-base: oklch(0.16 0.035 240);
+  --ayra-scene-foreground: oklch(0.95 0.02 230);
+  --ayra-scene-muted: oklch(0.78 0.04 240);
+  --ayra-scene-panel: oklch(0.17 0.05 255 / 0.75);
+}
+.dashboard-hero {
+  isolation: isolate;
+  overflow: hidden;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  min-height: 540px;
+  background: var(--ayra-scene-base);
+  color: var(--ayra-scene-foreground);
+  --foreground: var(--ayra-scene-foreground);
+  --muted-foreground: var(--ayra-scene-muted);
+  --card: var(--ayra-scene-panel);
+}
+.dashboard-hero .hero-avatar { position: absolute; inset: 0; height: auto; z-index: -1; }
+.ayra-cinematic-scene { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+.ayra-banner-shade { position: absolute; inset: 0; background: linear-gradient(0deg, var(--ayra-scene-base) 0%, transparent 55%), linear-gradient(90deg, var(--ayra-scene-base), transparent 65%); }
+.ayra-banner-portrait { position: absolute; top: 0; right: 3%; width: 49%; height: 85%; }
+.ayra-banner-look { mask-image: linear-gradient(90deg, transparent, black 20%, black 85%, transparent), linear-gradient(180deg, black 65%, transparent 100%); mask-composite: intersect; }
+.dashboard-hero .hero-identity { align-self: center; width: 46%; padding: 32px; text-align: left; min-height: 340px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
+.dashboard-hero .hero-identity > .panel { max-height: 220px; overflow-y: auto; margin-left: 0; }
+.dashboard-hero .hero-streams { grid-column: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; padding: 16px 32px 24px; align-self: end; }
+.dashboard-hero .hero-streams > div { display: flex; flex-direction: row; flex-wrap: wrap; align-content: flex-start; align-items: flex-start; gap: 6px; }
+.dashboard-hero .hero-streams > div > div:first-child { flex-basis: 100%; }
+.dashboard-hero .hero-streams > div > .panel { width: auto; }
+@media (max-width: 767px) {
+  .dashboard-hero { min-height: 560px; }
+  .ayra-cinematic-scene { height: 360px; object-position: 62% top; }
+  .ayra-banner-portrait { right: 0; width: 58%; height: 350px; }
+  .dashboard-hero .hero-identity { min-height: 340px; width: 52%; padding: 16px; }
+  .dashboard-hero .hero-streams { padding: 16px; gap: 12px; }
+}
+@media (max-width: 359px) {
+  .dashboard-hero .hero-identity { padding: 12px; }
+  .dashboard-hero .hero-streams { padding: 12px; gap: 8px; }
+}
+
+/* Split mission workspace; all telemetry is event-fed, not timer-generated. */
+.core:not([data-look="default"]) > .ayra-cinematic-scene { visibility: hidden; }
+.dashboard-hero { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; }
+.dashboard-hero .hero-identity { grid-column: 2; grid-row: 1; width: 100%; align-self: end; min-height: 540px; justify-content: flex-end; padding: 24px; pointer-events: none; }
+.dashboard-hero .hero-identity > * { pointer-events: auto; }
+.dashboard-hero .hero-identity > .panel { max-height: 150px; }
+.dashboard-hero .hero-streams { grid-column: 1 / -1; }
+.ayra-cinematic-scene { object-position: right top; }
+.action-workspace { grid-column: 1; grid-row: 1; min-width: 0; position: relative; padding: 24px; background: var(--ayra-scene-panel); border-right: 1px solid var(--border); box-shadow: inset 0 0 32px color-mix(in oklab, var(--primary) 12%, transparent); }
+.workspace-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.workspace-modes { display: flex; flex-wrap: wrap; gap: 3px; margin: 18px 0; border-block: 1px solid var(--border); padding-block: 8px; }
+.workspace-title { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 14px; font-size: 12px; }
+.workspace-request { padding-block: 8px; border-bottom: 1px solid var(--border); }
+.workspace-request p { margin-top: 4px; overflow-wrap: anywhere; font-size: 14px; }
+.workspace-metrics { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; padding-block: 12px; }
+.workspace-metrics dt { font-size: 11px; color: var(--muted-foreground); }
+.workspace-metrics dd { font-size: 15px; color: var(--accent); overflow-wrap: anywhere; }
+.workspace-output { border-block: 1px solid var(--border); padding: 12px 0; }
+.workspace-output pre { min-height: 110px; max-height: 220px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font: 14px/1.6 var(--font-sans); }
+.workspace-events { margin-top: 12px; font-size: 11px; color: var(--muted-foreground); max-height: 90px; overflow: auto; }
+.workspace-events li { border-left: 1px solid var(--border); padding: 3px 10px; }
+.workspace-idle { min-height: 280px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; }
+.workspace-reticle { padding: 24px; border: 1px solid var(--border); border-radius: 6px; transform: perspective(600px) rotateX(12deg); box-shadow: 0 12px 24px color-mix(in oklab, var(--primary) 12%, transparent); }
+.workspace-idle-line { width: 80%; height: 1px; background: var(--border); margin-top: 16px; }
+@media (max-width: 767px) {
+ .dashboard-hero { grid-template-columns: minmax(0,1fr); }
+ .dashboard-hero .hero-identity { grid-column: 1; grid-row: 1; min-height: 360px; width: 100%; padding: 16px; }
+ .action-workspace { grid-column: 1; grid-row: 2; padding: 16px; border-right: 0; border-block: 1px solid var(--border); }
+ .dashboard-hero .hero-streams { grid-row: 3; }
+}
+
+/* Immersive presentation: existing dashboard tools remain in document order. */
+:root {
+  --command-depth-shadow: 0 28px 55px color-mix(in oklab, var(--ayra-scene-base) 80%, transparent);
+  --command-glass: color-mix(in oklab, var(--ayra-scene-panel) 85%, transparent);
+  --command-edge-light: color-mix(in oklab, var(--accent) 35%, transparent);
+}
+.immersive-dashboard .dashboard-shell { display: block; padding-inline: 0; }
+.immersive-dashboard .dashboard-header { position: relative; z-index: 10; border-bottom: 1px solid var(--border); }
+.command-navigation { background: var(--background); overflow-y: auto; width: min(340px, 90vw); }
+.command-navigation .dashboard-nav { overflow: visible; padding: 0; }
+.command-navigation .dashboard-nav > button { width: 100%; height: auto; justify-content: flex-start; }
+.immersive-dashboard .dashboard-main { gap: 20px; }
+.immersive-dashboard .dashboard-main > :not(.dashboard-hero) { margin-inline: 20px; width: auto; }
+.immersive-dashboard .dashboard-main > .dashboard-command { width: calc(100% - 40px); margin-inline: auto; }
+.immersive-dashboard .dashboard-hero {
+  min-height: min(880px, max(660px, calc(100svh - 94px)));
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  border-radius: 0 0 36px 36px;
+  border-bottom: 1px solid var(--border);
+  perspective: 1400px;
+}
+.preserved-action-workspace[hidden] { display: none; }
+.command-center-scene { position: absolute; inset: 0; pointer-events: none; z-index: -3; }
+.command-center-scene canvas { display: block; }
+.immersive-dashboard .hero-avatar { z-index: -2; overflow: visible; }
+.immersive-dashboard .ayra-cinematic-scene { display: none; }
+.immersive-dashboard .ayra-banner-shade { background: linear-gradient(0deg, var(--ayra-scene-base), transparent 65%); }
+.immersive-dashboard .ayra-banner-portrait {
+  right: 0; top: 20px; height: calc(100% - 110px); width: 48%;
+}
+.immersive-dashboard .ayra-banner-look { object-fit: contain; object-position: center top; mask-image: linear-gradient(180deg, black 76%, transparent); mask-composite: add; }
+.immersive-dashboard .hero-identity { min-height: 440px; padding: 28px 32px; z-index: 2; }
+.immersive-dashboard .hero-identity > :first-child { font-size: 40px; }
+.immersive-dashboard .hero-identity > .panel { background: var(--command-glass); }
+.immersive-dashboard .action-workspace {
+  margin: 30px 0 22px 32px; padding: 24px; align-self: center;
+  border: 1px solid var(--border); border-radius: 8px;
+  background: var(--command-glass); backdrop-filter: blur(18px);
+  transform: rotateY(3deg); transform-origin: left center;
+  box-shadow: var(--command-depth-shadow), inset 0 1px 0 var(--command-edge-light);
+  transition: transform 1.1s ease, background 1.1s ease;
+}
+.immersive-dashboard [data-task-running="true"] .action-workspace { transform: rotateY(0); }
+.immersive-dashboard .hero-streams { z-index: 2; background: var(--command-glass); border-top: 1px solid var(--border); border-radius: 50% 50% 0 0 / 18px 18px 0 0; }
+.workspace-file-scene { display: flex; align-items: center; gap: 24px; padding-block: 16px; perspective: 700px; }
+.workspace-folder { position: relative; width: 68px; height: 48px; flex-shrink: 0; transform-style: preserve-3d; }
+.workspace-folder-back { position: absolute; inset: 0; background: var(--primary); border-radius: 3px; }
+.workspace-folder-back::before { content: ""; position: absolute; top: -6px; width: 28px; height: 8px; background: var(--primary); border-radius: 3px 3px 0 0; }
+.workspace-folder-front { position: absolute; inset: 8px -3px -3px; border: 1px solid var(--accent); background: var(--command-glass); transform-origin: bottom; transform: rotateX(-28deg); animation: folder-open .7s ease both; }
+.workspace-file-document { display: flex; flex-direction: column; gap: 4px; min-width: 0; overflow-wrap: anywhere; animation: fade-up .5s ease both; }
+.workspace-request-path { display: flex; gap: 12px; align-items: center; padding: 14px 0; color: var(--accent); }
+.workspace-request-path > span { display: flex; gap: 6px; align-items: center; }
+.workspace-path-line { flex: 1; height: 1px; background: var(--border); animation: received-signal .5s ease both; }
+@keyframes received-signal { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes folder-open { from { transform: rotateX(0); } to { transform: rotateX(-28deg); } }
+@media (max-width: 767px) {
+ .immersive-dashboard .dashboard-hero, .immersive-dashboard .dashboard-hero[data-task-running="true"] { grid-template-columns: minmax(0,1fr); min-height: 900px; }
+ .immersive-dashboard .ayra-banner-portrait { top: 10px; right: 0; width: 72%; height: 380px; }
+ .immersive-dashboard .hero-identity { min-height: 350px; padding: 18px; }
+ .immersive-dashboard .hero-identity > .panel { max-width: 70%; max-height: 100px; }
+ .immersive-dashboard .action-workspace { margin: 10px 14px 20px; padding: 16px; transform: none; }
+ .immersive-dashboard .dashboard-main > :not(.dashboard-hero) { margin-inline: 12px; }
+ .immersive-dashboard .dashboard-main > .dashboard-command { width: calc(100% - 24px); }
+ .workspace-request-path { gap: 6px; flex-wrap: wrap; }
+}
+
+
+/* AYRA owns the full banner; a real running task splits it in half */
+.immersive-dashboard .dashboard-hero:not([data-task-running="true"]) { grid-template-columns: minmax(0, 1fr); }
+.immersive-dashboard .dashboard-hero:not([data-task-running="true"]) .hero-identity { grid-column: 1; width: 46%; justify-self: start; }
+.immersive-dashboard .dashboard-hero:not([data-task-running="true"]) .ayra-banner-portrait { right: 8%; width: 46%; }
+.immersive-dashboard .dashboard-hero[data-task-running="true"] { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.immersive-dashboard .dashboard-hero[data-task-running="true"] .ayra-banner-portrait { right: 0; width: 46%; }
+.immersive-dashboard .ayra-banner-portrait { transition: right 1s ease, width 1s ease; }
+.ayra-office-backdrop { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; filter: blur(42px) saturate(1.3) brightness(.7); transform: scale(1.25); opacity: .55; animation: office-fade .9s ease both; }
+@keyframes office-fade { from { opacity: 0; } to { opacity: .55; } }
+.ayra-banner-video { animation: fade-up .6s ease both; }
+@media (max-width: 767px) {
+  .immersive-dashboard .dashboard-hero:not([data-task-running="true"]) .hero-identity { width: 100%; }
+  .immersive-dashboard .dashboard-hero:not([data-task-running="true"]) .ayra-banner-portrait { right: 0; width: 72%; }
+  .immersive-dashboard .dashboard-hero:not([data-task-running="true"]) { min-height: 560px; }
+}
+
+/* AYRA's office: one fixed, edge-to-edge environment from the header down; never resized by tasks */
+.immersive-dashboard .dashboard-main { padding-top: 0; }
+.immersive-dashboard .dashboard-hero,
+.immersive-dashboard .dashboard-hero[data-task-running="true"],
+.immersive-dashboard .dashboard-hero:not([data-task-running="true"]) {
+  margin-top: 0; border-radius: 0; border: 0; overflow: hidden;
+  height: clamp(560px, calc(100svh - var(--office-top, 64px)), 900px); min-height: 0;
+  grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto;
+}
+.immersive-dashboard .dashboard-hero .ayra-banner-portrait,
+.immersive-dashboard .dashboard-hero[data-task-running="true"] .ayra-banner-portrait,
+.immersive-dashboard .dashboard-hero:not([data-task-running="true"]) .ayra-banner-portrait {
+  top: 0; right: 0; width: 58%; height: 100%; border: 0; border-radius: 0; box-shadow: none; background: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 30%, black 85%, transparent), linear-gradient(180deg, black 70%, transparent);
+  mask-image: linear-gradient(90deg, transparent, black 30%, black 85%, transparent), linear-gradient(180deg, black 70%, transparent);
+  -webkit-mask-composite: source-in; mask-composite: intersect;
+}
+.immersive-dashboard .dashboard-hero .ayra-banner-video, .immersive-dashboard .dashboard-hero .ayra-banner-look { object-fit: cover; object-position: center top; border-radius: 0; }
+.immersive-dashboard .dashboard-hero .hero-identity,
+.immersive-dashboard .dashboard-hero:not([data-task-running="true"]) .hero-identity { grid-column: 1; grid-row: 1; width: 46%; min-height: 0; justify-self: start; }
+.immersive-dashboard .dashboard-hero .hero-streams { grid-row: 2; }
+/* The task area floats inside the office's left half; the office itself keeps its size */
+.immersive-dashboard .dashboard-hero .preserved-action-workspace:not([hidden]) {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 50%; z-index: 3; overflow-y: auto; display: grid; align-content: center;
+}
+@media (max-width: 767px) {
+  .immersive-dashboard .dashboard-hero, .immersive-dashboard .dashboard-hero[data-task-running="true"], .immersive-dashboard .dashboard-hero:not([data-task-running="true"]) { height: clamp(620px, calc(100svh - var(--office-top, 170px)), 900px); }
+  .immersive-dashboard .dashboard-hero .ayra-banner-portrait, .immersive-dashboard .dashboard-hero[data-task-running="true"] .ayra-banner-portrait, .immersive-dashboard .dashboard-hero:not([data-task-running="true"]) .ayra-banner-portrait { width: 100%; right: 0; height: 72%;
+    -webkit-mask-image: linear-gradient(180deg, black 60%, transparent); mask-image: linear-gradient(180deg, black 60%, transparent); }
+  .immersive-dashboard .dashboard-hero .hero-identity, .immersive-dashboard .dashboard-hero:not([data-task-running="true"]) .hero-identity { width: 100%; align-self: end; }
+  .immersive-dashboard .dashboard-hero .preserved-action-workspace:not([hidden]) { width: 100%; bottom: auto; max-height: 60%; }
+}
+/* Data inputs / AI outputs sit directly under AYRA's office so the office holds only AYRA and her agent interface */
+.immersive-dashboard .office-streams { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: -20px; padding: 16px 32px; }
+.immersive-dashboard .office-streams > div { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 6px; }
+.immersive-dashboard .office-streams > div > div:first-child { flex-basis: 100%; }
+.immersive-dashboard .dashboard-hero { grid-template-rows: minmax(0, 1fr); }
+@media (max-width: 767px) { .immersive-dashboard .office-streams { gap: 12px; padding: 12px; } }
+
+/* Full-screen office: header hidden on this view (menu button stays as a floating control for navigation) */
+.immersive-dashboard .dashboard-header { position: absolute; inset: 0 auto auto 0; z-index: 20; padding: 12px; border: 0; background: none; display: block; height: 0; }
+.immersive-dashboard .dashboard-header > :not(:first-child) { display: none !important; }
+.immersive-dashboard .dashboard-header > :first-child { background: var(--command-glass); backdrop-filter: blur(12px); }
+html, body { overflow-x: hidden; }
+.immersive-dashboard .dashboard-shell, .immersive-dashboard .dashboard-main { padding: 0; margin: 0; }
+.immersive-dashboard .dashboard-hero,
+.immersive-dashboard .dashboard-hero[data-task-running="true"],
+.immersive-dashboard .dashboard-hero:not([data-task-running="true"]) { width: 100vw; max-width: 100%; height: 100svh; margin: 0; border-radius: 0; }
+@media (max-width: 767px) {
+  .immersive-dashboard .dashboard-hero, .immersive-dashboard .dashboard-hero[data-task-running="true"], .immersive-dashboard .dashboard-hero:not([data-task-running="true"]) { height: 100svh; }
+}
+.immersive-dashboard .office-streams { margin-top: 0; }
+/* AYRA's office wall with the single Software Vala logo in the centre */
+.ayra-office-wall { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
+.immersive-dashboard .ayra-office-backdrop { display: none; }
+.immersive-dashboard .ayra-office-wall { z-index: 0; }
+.immersive-dashboard .ayra-banner-shade, .immersive-dashboard .command-center-scene { display: none; }
+.immersive-dashboard .ayra-banner-portrait { z-index: 1; }
+/* Plain white office across the whole banner; logo centred in the open left half, slightly raised */
+.ayra-office-wall { background: #fff; }
+.ayra-office-logo { position: absolute; left: 25%; top: 34%; width: min(40%, 560px); height: auto; transform: translate(-50%, -50%); }
+@media (max-width: 767px) { .ayra-office-logo { left: 50%; top: 77%; width: 78%; z-index: 2; } }
+/* AYRA's full face visible and centred (no zoom-crop) */
+.immersive-dashboard .dashboard-hero .ayra-banner-video, .immersive-dashboard .dashboard-hero .ayra-banner-look { object-fit: contain; object-position: center center; }
