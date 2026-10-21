@@ -11,4 +11,4 @@
 - [x] Talk/Mute: real mic permission, blocked + unsupported states, tested
 - [x] Finish remaining reference match, summarize differences
 - [x] Voice: verify speech -> command flow, fix if broken
-- [ ] Agent videos blend into scene (no white bg), proportions kept
+- [x] Agent videos blend into scene (no white bg), proportions kept

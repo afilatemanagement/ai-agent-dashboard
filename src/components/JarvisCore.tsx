@@ -106,16 +106,16 @@ export const LOOK_SCENE: Record<AyraLook, string> = {
 };
 /** Each look's own motion clip (blinks, breathes, turns) — same outfit as the photo. */
 export const LOOK_VIDEO: Partial<Record<AyraLook, string>> = {
-  default: sv_default.url,
-  cyanSide: sv_cyanSide.url,
-  cyanJacket: sv_cyanJacket.url,
-  amberSide: sv_amberSide.url,
-  amberFront: sv_amberFront.url,
-  amberProfile: sv_amberProfile.url,
-  gold: sv_gold.url,
-  bob: sv_bob.url,
-  crystal: sv_crystal.url,
-  veil: sv_veil.url,
+  default: v_default.url,
+  cyanSide: v_cyanSide.url,
+  cyanJacket: v_cyanJacket.url,
+  amberSide: v_amberSide.url,
+  amberFront: v_amberFront.url,
+  amberProfile: v_amberProfile.url,
+  gold: v_gold.url,
+  bob: v_bob.url,
+  crystal: v_crystal.url,
+  veil: v_veil.url,
 };
 /** Per-look framing so every agent's face, neck and shoulders fit the screen. */
 const LOOK_FIT: Partial<Record<AyraLook, string>> = { default: "cover" };
