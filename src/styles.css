@@ -668,8 +668,13 @@ html, body { overflow-x: hidden; }
 .aw-panel { position: relative; border-radius: 14px; border: 1px solid var(--aw-line); background: var(--aw-panel); box-shadow: inset 0 0 30px oklch(0.6 0.2 250 / .12); overflow: hidden; }
 .aw-stage { min-height: 840px; }
 .aw-stage-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
-.aw-look { position: absolute; inset: 60px 0 150px; background: radial-gradient(ellipse at 50% 60%, oklch(0.3 0.06 255 / .9), oklch(0.17 0.04 255 / .98) 70%); }
-.aw-look > * { -webkit-mask-image: radial-gradient(ellipse 60% 80% at 50% 55%, black 60%, transparent); mask-image: radial-gradient(ellipse 60% 80% at 50% 55%, black 60%, transparent); }
+.aw-look { position: absolute; inset: 0; overflow: hidden; background: var(--aw-bg); }
+.aw-look > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 18%; -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent); mask-image: linear-gradient(to bottom, black 70%, transparent); }
+.aw-look-live { animation: aw-alive 7s ease-in-out infinite; transform-origin: 50% 70%; }
+@keyframes aw-alive { 0%,100% { transform: scale(1.02) translateY(0) rotate(0deg); } 50% { transform: scale(1.035) translateY(-4px) rotate(.25deg); } }
+@media (prefers-reduced-motion: reduce) { .aw-look-live { animation: none; } }
+.aw-look > video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center bottom; -webkit-mask-image: radial-gradient(ellipse 34% 60% at 50% 50%, black 65%, transparent 100%); mask-image: radial-gradient(ellipse 34% 60% at 50% 50%, black 65%, transparent 100%); }
+.aw-motion { position: absolute; right: 14px; top: 82px; z-index: 5; border: 1px solid var(--aw-line); background: var(--aw-panel); color: var(--aw-text); border-radius: 999px; padding: 6px 14px; font-size: 13px; }
 .aw-stage-shade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, oklch(0.15 0.04 255 / .55), transparent 18%, transparent 70%, oklch(0.15 0.04 255 / .7)); }
 .aw-glass { border-radius: 12px; border: 1px solid var(--aw-line); background: oklch(0.2 0.05 255 / .72); backdrop-filter: blur(8px); }
 .aw-bubble { position: absolute; left: 36px; top: 196px; width: 186px; padding: 1rem 1.2rem; border-radius: 16px; border: 1.5px solid var(--aw-cyan);
@@ -704,6 +709,3 @@ html, body { overflow-x: hidden; }
 @media (max-width: 1100px) { .aw-main { grid-template-columns: 1fr; } .aw-top { flex-wrap: wrap; height: auto; padding: .5rem; } }
 .aw-chip { font-size: 14px; padding: 0 .9rem; gap: .55rem; white-space: nowrap; }
 .aw-agents { top: 455px; bottom: 230px; }
-.aw-look { inset: 40px 0 120px; }
-.aw-look > * { object-fit: cover !important; object-position: center 15% !important; -webkit-mask-image: radial-gradient(ellipse 36% 52% at 50% 45%, black 55%, transparent 100%); mask-image: radial-gradient(ellipse 36% 52% at 50% 45%, black 55%, transparent 100%); }
-.aw-look > * { object-fit: contain !important; object-position: center bottom !important; -webkit-mask-image: radial-gradient(ellipse 30% 60% at 50% 50%, black 70%, transparent 100%); mask-image: radial-gradient(ellipse 30% 60% at 50% 50%, black 70%, transparent 100%); }

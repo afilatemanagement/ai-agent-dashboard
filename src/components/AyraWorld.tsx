@@ -3,7 +3,7 @@ import {
   ArrowLeft, ArrowRight, RotateCw, Sparkles, Mic, MicOff, Phone, Box, ChevronDown, Settings, Globe, Github, Plus,
   ListChecks, Maximize2, X, Lock, Search, Star, Download, Share, MoreVertical, Send, Grid3x3,
 } from "lucide-react";
-import { AYRA_LOOKS, LOOK_NAMES, LOOK_VIDEO, type AyraLook, type CoreState } from "@/components/JarvisCore";
+import { AYRA_LOOKS, LOOK_NAMES, LOOK_VIDEO, LOOK_SCENE, type AyraLook, type CoreState } from "@/components/JarvisCore";
 import stage from "@/assets/ayra-world-stage.jpg";
 import { accessHeaders } from "@/lib/access-client";
 
@@ -79,14 +79,15 @@ export function AgentStage({ core, look, setLook, reply, muted, setMuted, onTalk
 }) {
   const listening = core === "listening";
   const looks = Object.keys(AYRA_LOOKS) as AyraLook[];
+  const [motion, setMotion] = useState(false);
   return (
     <section className="aw-panel aw-stage">
       <img src={stage} alt="AYRA in her world" className="aw-stage-bg" />
       {look && (
-        <div className="aw-look" key={look}>
-          {LOOK_VIDEO[look] ? (
-            <video src={LOOK_VIDEO[look]} poster={AYRA_LOOKS[look]} autoPlay muted loop playsInline className="h-full w-full object-contain object-bottom" />
-          ) : <img src={AYRA_LOOKS[look]} alt={LOOK_NAMES[look]} className="h-full w-full object-contain object-bottom" />}
+        <div className="aw-look" key={look} data-motion={motion && !!LOOK_VIDEO[look] ? "on" : "off"}>
+          {motion && LOOK_VIDEO[look]
+            ? <video src={LOOK_VIDEO[look]} poster={AYRA_LOOKS[look]} autoPlay muted loop playsInline aria-label={`${LOOK_NAMES[look]} moving`} />
+            : <img src={LOOK_SCENE[look]} alt={LOOK_NAMES[look]} className="aw-look-live" />}
         </div>
       )}
       <div className="aw-stage-shade" />
@@ -112,10 +113,11 @@ export function AgentStage({ core, look, setLook, reply, muted, setMuted, onTalk
       <div className="aw-agents" aria-label="All agents">
         <button onClick={() => setLook(null)} title="AYRA's World" className={!look ? "on" : ""}><img src={stage} alt="AYRA's World" /></button>
         {looks.map((k) => (
-          <button key={k} onClick={() => setLook(k)} title={LOOK_NAMES[k]} className={look === k ? "on" : ""}><img src={AYRA_LOOKS[k]} alt={LOOK_NAMES[k]} /></button>
+          <button key={k} onClick={() => setLook(k)} title={LOOK_NAMES[k]} className={look === k ? "on" : ""}><img src={LOOK_SCENE[k]} alt={LOOK_NAMES[k]} /></button>
         ))}
       </div>
       {look && <div className="aw-name">{LOOK_NAMES[look]}</div>}
+      {look && LOOK_VIDEO[look] && <button onClick={() => setMotion(!motion)} aria-pressed={motion} className="aw-motion">{motion ? "Show in scene" : "Play motion"}</button>}
       <div className="absolute bottom-[172px] left-1/2 flex -translate-x-[48%] gap-6">
         <div className="flex flex-col items-center gap-2"><button aria-label="Talk" onClick={onTalk} className={`aw-round aw-talk ${listening ? "on" : ""}`}><Mic className="h-8 w-8" /></button><span>Talk</span></div>
         <div className="flex flex-col items-center gap-2"><button aria-label="Mute" aria-pressed={muted} onClick={() => setMuted(!muted)} className={`aw-round aw-mute ${muted ? "on" : ""}`}><MicOff className="h-7 w-7" /></button><span>Mute</span></div>
