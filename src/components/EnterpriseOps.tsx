@@ -13,7 +13,7 @@ const card = "rounded-md border border-border/60 bg-muted/30 p-3";
 const ALERTS = [
   { id: 1, text: "Ayra successfully deployed the server.", tone: "border-success/60 bg-success/15 text-success" },
   { id: 2, text: "Warning: High CPU usage detected on VPS.", tone: "border-danger/60 bg-danger/15 text-danger" },
-  { id: 3, text: "New login attempt from unknown IP.", tone: "border-warning/60 bg-warning/15 text-warning" },
+  { id: 3, text: "New login attempt from unknown IP.", tone: "border-accent/60 bg-accent/15 text-accent" },
 ];
 
 export function NotificationBell() {
