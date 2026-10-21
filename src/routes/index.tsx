@@ -21,6 +21,7 @@ import {
   Send,
   CircleDot,
   Sparkles,
+  MessageSquare,
 } from "lucide-react";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -29,7 +30,12 @@ import { isWorkspaceRunning } from "@/lib/command-center";
 import { JarvisCore, stateLabel, type CoreState, type AyraLook } from "@/components/JarvisCore";
 import { ModulePanel, type ModuleId } from "@/components/ModulePanel";
 import { LookbookPanel } from "@/components/LookbookPanel";
-import { ActionWorkspace } from "@/components/ActionWorkspace";
+import { IdeWorkspace } from "@/components/IdeWorkspace";
+import { ChatPanel } from "@/components/ChatPanel";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { listSettings } from "@/lib/admin.functions";
+import { readControl } from "@/lib/control-state";
 import { applyTaskEvent, type TaskEvent, type WorkspaceTask } from "@/lib/workspace-events";
 import { useBannerThemeCycle } from "@/lib/theme-cycle";
 const CommandCenterScene = lazy(() => import("@/components/CommandCenterScene"));
@@ -96,6 +102,10 @@ function Dashboard() {
   const [hidden, setHidden] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const palette = useBannerThemeCycle();
+  const [chatOpen, setChatOpen] = useState(false);
+  const settingsFn = useServerFn(listSettings);
+  const settingsQ = useQuery({ queryKey: ["settings"], queryFn: () => settingsFn() });
+  const { systemControlState } = readControl(settingsQ.data);
   // Controlled by AI task state only — true while AYRA is executing a task.
   const agentNeedsWorkspace = isWorkspaceRunning(workspaceTask);
   useEffect(() => {
@@ -207,7 +217,10 @@ function Dashboard() {
     setOpen(i);
   };
   return (
-    <div className={`immersive-dashboard min-h-screen text-foreground ${hidden || open !== null ? "paused" : ""}`}>
+    <div
+      className={`immersive-dashboard min-h-screen text-foreground ${hidden || open !== null ? "paused" : ""}`}
+      style={{ filter: systemControlState.brightness < 100 ? `brightness(${systemControlState.brightness / 100})` : undefined }}
+    >
       <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
         <SheetContent side="left" className="command-navigation" aria-describedby={undefined}>
           <SheetTitle className="font-display text-primary">Software Vala</SheetTitle>
@@ -275,7 +288,7 @@ function Dashboard() {
             </div>
             <div className="split-workspace" aria-hidden={!agentNeedsWorkspace}>
               <div className="split-workspace-label font-display">LIVE BROWSER / WORKSPACE</div>
-              <ActionWorkspace task={workspaceTask} onTask={setWorkspaceTask} />
+              <IdeWorkspace task={workspaceTask} onTask={setWorkspaceTask} />
             </div>
           </div>
 
@@ -290,6 +303,13 @@ function Dashboard() {
             >
               <Sparkles className="h-3 w-3" />
               LOOKBOOK
+            </button>
+            <button
+              onClick={() => setChatOpen(true)}
+              className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 font-display text-[10px] tracking-widest text-primary transition hover:bg-primary/20"
+            >
+              <MessageSquare className="h-3 w-3" />
+              CHAT WITH AYRA
             </button>
             <div aria-live="polite" className="mt-2 text-xs text-muted-foreground">
               {stateLabel[core]}
@@ -373,6 +393,7 @@ function Dashboard() {
           onClose={() => setOpen(null)}
         />
       )}
+      <ChatPanel open={chatOpen} onClose={() => setChatOpen(false)} />
       {lookbook && (
         <LookbookPanel
           current={lookOverride}
