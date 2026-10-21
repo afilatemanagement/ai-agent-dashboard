@@ -73,9 +73,9 @@ export function TopBar({ cmd, setCmd, onRun, listening, onMic, onTools, onSettin
   );
 }
 
-export function AgentStage({ core, look, setLook, reply, muted, setMuted, onTalk, onEnd, onShortcut }: {
+export function AgentStage({ core, look, setLook, reply, muted, micNote, micState, setMuted, onTalk, onEnd, onShortcut }: {
   core: CoreState; look: AyraLook | null; setLook: (l: AyraLook | null) => void; reply: string;
-  muted: boolean; setMuted: (m: boolean) => void; onTalk: () => void; onEnd: () => void; onShortcut: (cmd: string, url?: string) => void;
+  muted: boolean; micNote?: string; micState?: string; setMuted: (m: boolean) => void; onTalk: () => void; onEnd: () => void; onShortcut: (cmd: string, url?: string) => void;
 }) {
   const listening = core === "listening";
   const looks = Object.keys(AYRA_LOOKS) as AyraLook[];
@@ -124,7 +124,7 @@ export function AgentStage({ core, look, setLook, reply, muted, setMuted, onTalk
         <div className="flex flex-col items-center gap-2"><button aria-label="End" onClick={onEnd} className="aw-round aw-end"><Phone className="h-8 w-8 rotate-[135deg]" /></button><span>End</span></div>
       </div>
       <div className="absolute bottom-[110px] left-[230px] flex items-center gap-3 text-sm text-[color:var(--aw-soft)]">
-        {listening ? "Listening..." : core === "idle" ? "Standing by" : "Working..."}
+        <span role="status" aria-live="polite" className={micState === "blocked" || micState === "unsupported" || micState === "no-device" ? "aw-mic-warn" : ""}>{micNote || (core === "idle" ? "Standing by" : "Working...")}</span>
         <div className={`aw-wave ${listening || core === "speaking" ? "live" : ""}`}>{Array.from({ length: 30 }, (_, i) => <span key={i} style={{ animationDelay: `${(i % 10) * 0.08}s`, height: `${20 + ((i * 37) % 80)}%` }} />)}</div>
       </div>
       <div className="aw-chips absolute bottom-4 left-11 right-3 flex flex-wrap gap-x-2.5 gap-y-2.5">

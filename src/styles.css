@@ -714,3 +714,4 @@ html, body { overflow-x: hidden; }
   .aw-stage .aw-chip { flex: none; }
   .aw-motion { top: auto !important; bottom: 330px; right: 10px; }
 }
+.aw-mic-warn { color: var(--aw-red); max-width: 260px; display: inline-block; line-height: 1.3; }

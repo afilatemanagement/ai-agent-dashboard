@@ -1,5 +1,5 @@
 import { accessHeaders } from "@/lib/access-client";
-import { useSpeech } from "@/lib/use-speech";
+import { useSpeech, MIC_MESSAGES } from "@/lib/use-speech";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Menu,
@@ -217,14 +217,13 @@ function Dashboard() {
   };
   const speech = useSpeech((text) => { setCmd(""); void run(text); });
   useEffect(() => { if (speech.interim) setCmd(speech.interim); }, [speech.interim]);
-  useEffect(() => { if (!speech.listening) setCore((c) => (c === "listening" ? "idle" : c)); }, [speech.listening]);
+  useEffect(() => { setCore((c) => (speech.listening ? "listening" : c === "listening" ? "idle" : c)); }, [speech.listening]);
   useEffect(() => { if (speech.error) setReply(speech.error); }, [speech.error]);
   const toggleTalk = () => {
     clear();
     if (speech.listening) { speech.stop(); return; }
     if (muted) { setReply("Microphone is muted. Tap Mute again to unmute."); return; }
-    speech.start();
-    setCore("listening");
+    void speech.start();
   };
   const toggleMute = (m: boolean) => {
     setMuted(m);
@@ -271,6 +270,8 @@ function Dashboard() {
           setLook={setLookOverride}
           reply={reply}
           muted={muted}
+          micNote={muted ? "Microphone muted" : MIC_MESSAGES[speech.status]}
+          micState={muted ? "muted" : speech.status}
           setMuted={toggleMute}
           onTalk={toggleTalk}
           onEnd={() => {
