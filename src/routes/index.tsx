@@ -21,7 +21,9 @@ import {
   Send,
   CircleDot,
   Sparkles,
+  Cog,
 } from "lucide-react";
+import { CommandSettings, useCenterConfig } from "@/components/CommandSettings";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
@@ -94,6 +96,8 @@ function Dashboard() {
   const [tilt, setTilt] = useState<[number, number]>([0, 0]);
   const [hidden, setHidden] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const { cfg } = useCenterConfig();
   useEffect(() => {
     const v = () => setHidden(document.hidden);
     const k = (e: KeyboardEvent) => {
@@ -203,7 +207,15 @@ function Dashboard() {
     setOpen(i);
   };
   return (
-    <div className={`immersive-dashboard min-h-screen text-foreground ${hidden || open !== null ? "paused" : ""}`}>
+    <div
+      className={`immersive-dashboard min-h-screen text-foreground ${hidden || open !== null ? "paused" : ""}`}
+      style={{ filter: cfg.brightness < 100 ? `brightness(${0.3 + (cfg.brightness / 100) * 0.7})` : undefined }}
+    >
+      {cfg.presence === "away" && (
+        <div role="alert" className="restricted-banner fixed inset-x-0 top-0 z-40 py-1.5 text-center font-display text-xs tracking-[0.3em]">
+          RESTRICTED MODE
+        </div>
+      )}
       <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
         <SheetContent side="left" className="command-navigation" aria-describedby={undefined}>
           <SheetTitle className="font-display text-primary">Software Vala</SheetTitle>
@@ -249,6 +261,15 @@ function Dashboard() {
             className="absolute left-3 top-3 z-20 rounded p-1 hover:bg-muted"
           >
             <Menu className="h-6 w-6 text-primary" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSettingsOpen(true)}
+            aria-label="Open Ayra Command Center settings"
+            className="absolute right-3 top-8 z-20 rounded-full"
+          >
+            <Cog className="h-6 w-6 text-primary" />
           </Button>
           <div hidden={!isWorkspaceRunning(workspaceTask)} className="preserved-action-workspace">
             <ActionWorkspace task={workspaceTask} onTask={setWorkspaceTask} />
@@ -352,6 +373,7 @@ function Dashboard() {
           onClose={() => setOpen(null)}
         />
       )}
+      {settingsOpen && <CommandSettings onClose={() => setSettingsOpen(false)} />}
       {lookbook && (
         <LookbookPanel
           current={lookOverride}
