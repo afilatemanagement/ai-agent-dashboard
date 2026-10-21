@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Box, Clock, FileText, Plus, Rocket, Shield, Terminal, X } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 
@@ -131,7 +132,7 @@ export function ServerOps() {
       </section>
 
       {note && <p className="text-xs text-muted-foreground">{note}</p>}
-      {term && <TerminalModal mode={term} procs={procs} onClose={() => setTerm(null)} />}
+      {term && createPortal(<TerminalModal mode={term} procs={procs} onClose={() => setTerm(null)} />, document.body)}
     </div>
   );
 }
