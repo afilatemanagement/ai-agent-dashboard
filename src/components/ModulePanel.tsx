@@ -83,7 +83,7 @@ function SettingsModule() {
   const list = useServerFn(listSettings);
   const save = useServerFn(saveSetting);
   const del = useServerFn(deleteSetting);
-  const q = useQuery({ queryKey: ["settings"], queryFn: () => list() });
+  const q = useQuery({ queryKey: ["settings"], queryFn: () => list(), retry: false });
   const refresh = () => {
     void qc.invalidateQueries({ queryKey: ["settings"] });
     void qc.invalidateQueries({ queryKey: ["security"] });
@@ -139,7 +139,7 @@ function RolesModule() {
   const list = useServerFn(listRoles);
   const save = useServerFn(saveRole);
   const del = useServerFn(deleteRole);
-  const q = useQuery({ queryKey: ["roles"], queryFn: () => list() });
+  const q = useQuery({ queryKey: ["roles"], queryFn: () => list(), retry: false });
   const refresh = () => {
     void qc.invalidateQueries({ queryKey: ["roles"] });
     void qc.invalidateQueries({ queryKey: ["security"] });
@@ -204,7 +204,7 @@ function RolesModule() {
 
 function SecurityModule() {
   const status = useServerFn(securityStatus);
-  const q = useQuery({ queryKey: ["security"], queryFn: () => status(), refetchInterval: 15000 });
+  const q = useQuery({ queryKey: ["security"], queryFn: () => status(), refetchInterval: 15000, retry: false });
   return (
     <State loading={q.isLoading} error={q.error} empty={false}>
       <div className="grid gap-4 text-sm">

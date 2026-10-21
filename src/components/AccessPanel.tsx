@@ -71,7 +71,7 @@ export function AccessPanel() {
         <form className="grid gap-2" onSubmit={(e) => { e.preventDefault(); login.mutate(); }}>
           <div className="flex items-center gap-2 text-xs text-accent"><Lock className="h-4 w-4" /> LOCKED — choose your role and enter its PIN</div>
           <div className="flex flex-wrap gap-2">
-            <select aria-label="Role" className={field} value={pick} onChange={(e) => setPick(e.target.value as typeof pick)}>
+            <select aria-label="Unlock as role" className={field} value={pick} onChange={(e) => setPick(e.target.value as typeof pick)}>
               {ROLES.filter((r) => rolesWithPin.includes(r)).map((r) => <option key={r} value={r}>{r}</option>)}
             </select>
             <input className={`${field} w-28`} type="password" inputMode="numeric" placeholder="PIN" aria-label="PIN" value={pin} onChange={(e) => setPinText(e.target.value)} />

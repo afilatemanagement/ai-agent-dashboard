@@ -126,7 +126,7 @@ export function OpsDashboard({ onClose }: { onClose: () => void }) {
 
 export function AuditLogs() {
   const fetchStatus = useServerFn(securityStatus);
-  const q = useQuery({ queryKey: ["security"], queryFn: () => fetchStatus(), refetchInterval: 15000 });
+  const q = useQuery({ queryKey: ["security"], queryFn: () => fetchStatus(), refetchInterval: 15000, retry: false });
   const rows = q.data?.log ?? [];
   const download = () => {
     const csv = [["Timestamp", "User/Agent", "Action", "Status", "IP Address"], ...rows.map((r) => [r.created_at, "Dashboard", `${r.action} ${r.target}`, "Success", "not recorded"])]

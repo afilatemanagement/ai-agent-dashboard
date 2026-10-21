@@ -14,6 +14,8 @@ export const PERMISSIONS = [
 
 // ---------- Access (PIN per role) ----------
 
+const MAX_PIN_FAILS = 5;
+
 export const accessStatus = createServerFn({ method: "GET" }).handler(async () => {
   const { data } = await (await db()).from("role_pins").select("role");
   return { role: await currentRole(), rolesWithPin: (data ?? []).map((r) => r.role) };
@@ -22,13 +24,24 @@ export const accessStatus = createServerFn({ method: "GET" }).handler(async () =
 export const unlockRole = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => z.object({ role: z.enum(ROLES), pin: z.string().min(4).max(32) }).parse(d))
   .handler(async ({ data }) => {
-    const { data: row } = await (await db()).from("role_pins").select("pin_hash, salt").eq("role", data.role).maybeSingle();
+    const client = await db();
+    const { data: row } = await client.from("role_pins").select("pin_hash, salt, failed_attempts, locked_until").eq("role", data.role).maybeSingle();
     if (!row) throw new Error("No PIN has been set for this role yet.");
+    if (row.locked_until && new Date(row.locked_until) > new Date()) {
+      throw new Error("Too many wrong PINs. This role is locked for 15 minutes.");
+    }
     const { hash } = await hashPin(data.pin, row.salt);
     if (hash !== row.pin_hash) {
+      const fails = row.failed_attempts + 1;
+      const lock = fails >= MAX_PIN_FAILS;
+      await client.from("role_pins").update({
+        failed_attempts: lock ? 0 : fails,
+        locked_until: lock ? new Date(Date.now() + 15 * 60 * 1000).toISOString() : null,
+      }).eq("role", data.role);
       await new Promise((r) => setTimeout(r, 800));
-      throw new Error("Wrong PIN.");
+      throw new Error(lock ? "Too many wrong PINs. This role is locked for 15 minutes." : `Wrong PIN. ${MAX_PIN_FAILS - fails} tries left.`);
     }
+    if (row.failed_attempts) await client.from("role_pins").update({ failed_attempts: 0, locked_until: null }).eq("role", data.role);
     return { role: data.role, token: await signToken(data.role) };
   });
 
@@ -41,7 +54,7 @@ export const setRolePin = createServerFn({ method: "POST" })
     const bootstrap = !sa && data.role === "Super Admin";
     if (!bootstrap) await requireSuperAdmin();
     const { hash, salt } = await hashPin(data.pin);
-    const { error } = await client.from("role_pins").upsert({ role: data.role, pin_hash: hash, salt, updated_at: new Date().toISOString() });
+    const { error } = await client.from("role_pins").upsert({ role: data.role, pin_hash: hash, salt, failed_attempts: 0, locked_until: null, updated_at: new Date().toISOString() });
     if (error) throw new Error(error.message);
     return bootstrap ? { ok: true, token: await signToken("Super Admin") } : { ok: true, token: null };
   });
