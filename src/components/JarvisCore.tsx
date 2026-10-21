@@ -211,6 +211,10 @@ export function JarvisCore({
       <img key={look} src={AYRA_LOOKS[look]} alt="" aria-hidden="true" className="ayra-office-backdrop" />
       <div className="ayra-banner-shade" />
       <div className="ayra-banner-portrait">
+        <div className="ayra-energy" aria-hidden="true">
+          <span className="energy-line l" /><span className="energy-line r" />
+          <i style={{ left: "40%", animationDelay: "0s" }} /><i style={{ left: "58%", animationDelay: "1.1s" }} /><i style={{ left: "49%", animationDelay: "2.2s" }} />
+        </div>
         {state === "verifying" && <div className="scan-line" />}
         {state === "completed" && (
           <div className="anim-pop absolute inset-[30%] rounded-full border-2 border-success" />

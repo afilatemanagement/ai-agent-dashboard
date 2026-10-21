@@ -269,7 +269,7 @@ function Dashboard() {
           >
             <Menu className="h-6 w-6 text-primary" />
           </Button>
-          <div className="absolute right-3 top-8 z-20 flex items-center gap-1">
+          <div className="absolute left-14 top-3 z-20 flex items-center gap-1">
             <Button variant="ghost" size="icon" onClick={() => setOpsOpen(true)} aria-label="Open Ayra Operations Dashboard" className="rounded-full">
               <Activity className="h-5 w-5 text-primary" />
             </Button>
@@ -380,6 +380,11 @@ function Dashboard() {
           </button>
         </div>
       </main>
+      <div className="ayra-ticker" aria-label="Sample activity ticker (demo)">
+        <div>
+          <span>DEMO · Ayra: Scanning VPS ports...</span><span>Ayra: Fetching GitHub data...</span><span>Ayra: Listening for commands...</span>
+        </div>
+      </div>
       {open !== null && nav[open] && (
         <ModulePanel
           index={open}

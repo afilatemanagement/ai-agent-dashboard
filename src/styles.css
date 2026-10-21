@@ -589,3 +589,25 @@ html, body { overflow-x: hidden; }
 .terminal-screen { background: oklch(0.12 0.01 150); color: oklch(0.85 0.2 145); }
 .voice-bar { height: 20%; animation: voice-bar 0.9s ease-in-out infinite alternate; }
 @keyframes voice-bar { 0% { height: 15%; } 100% { height: 95%; } }
+/* Balanced, uncropped avatar + energy flow on the neck hardware only */
+.immersive-dashboard .dashboard-hero .ayra-banner-portrait,
+.immersive-dashboard .dashboard-hero[data-task-running="true"] .ayra-banner-portrait,
+.immersive-dashboard .dashboard-hero:not([data-task-running="true"]) .ayra-banner-portrait { width: 42%; right: 4%; top: 6%; height: 94%; }
+.immersive-dashboard .dashboard-hero .ayra-banner-video, .immersive-dashboard .dashboard-hero .ayra-banner-look,
+.immersive-dashboard .dashboard-hero .ayra-banner-portrait > img, .immersive-dashboard .dashboard-hero .ayra-banner-portrait > video { object-fit: contain; object-position: center bottom; image-rendering: auto; }
+.ayra-energy { position: absolute; inset: auto 0 0 0; height: 16%; z-index: 3; pointer-events: none; mix-blend-mode: screen; }
+.ayra-energy .energy-line { position: absolute; bottom: 0; width: 2px; height: 100%; border-radius: 2px;
+  background: linear-gradient(0deg, transparent, var(--primary), transparent); background-size: 100% 200%;
+  box-shadow: 0 0 10px var(--primary); opacity: .55; animation: energy-flow 2.4s linear infinite; }
+.ayra-energy .energy-line.l { left: 42%; transform: rotate(-12deg); }
+.ayra-energy .energy-line.r { left: 57%; transform: rotate(12deg); animation-delay: 1.2s; }
+.ayra-energy i { position: absolute; bottom: 0; width: 5px; height: 5px; border-radius: 50%; background: var(--primary);
+  box-shadow: 0 0 8px 2px var(--primary); animation: energy-spark 3.3s ease-in-out infinite; opacity: 0; }
+@keyframes energy-flow { from { background-position: 0 200%; } to { background-position: 0 -200%; } }
+@keyframes energy-spark { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: .9; } 70% { opacity: .5; } 100% { transform: translateY(-60px); opacity: 0; } }
+.ayra-ticker { position: fixed; inset: auto 0 0 0; z-index: 15; height: 24px; overflow: hidden; background: color-mix(in oklab, var(--background) 80%, transparent);
+  border-top: 1px solid color-mix(in oklab, var(--primary) 40%, transparent); box-shadow: 0 -4px 16px color-mix(in oklab, var(--primary) 18%, transparent); backdrop-filter: blur(8px); }
+.ayra-ticker > div { display: inline-flex; gap: 3rem; white-space: nowrap; padding-top: 4px; font-size: 11px; letter-spacing: .08em; color: var(--primary); animation: ticker 28s linear infinite; }
+@keyframes ticker { from { transform: translateX(100vw); } to { transform: translateX(-100%); } }
+@media (prefers-reduced-motion: reduce) { .ayra-energy *, .ayra-ticker > div { animation: none; } }
+@media (max-width: 767px) { .immersive-dashboard .dashboard-hero .ayra-banner-portrait { width: 100%; right: 0; } }
