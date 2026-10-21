@@ -574,3 +574,14 @@ html, body { overflow-x: hidden; }
 }
 .immersive-dashboard .dashboard-hero .hero-identity > button:first-child { font-size: 10px; }
 .ayra-office-logo { mix-blend-mode: multiply; }
+/* Avatar: natural cover fit plus a gentle breathing motion */
+.immersive-dashboard .dashboard-hero .ayra-banner-video, .immersive-dashboard .dashboard-hero .ayra-banner-look,
+.immersive-dashboard .dashboard-hero .ayra-banner-portrait > * { object-fit: cover; object-position: top center; }
+.immersive-dashboard .ayra-banner-portrait { animation: ayra-breathe 4s ease-in-out infinite; transform-origin: center top; }
+@keyframes ayra-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.01); } }
+@media (prefers-reduced-motion: reduce) { .immersive-dashboard .ayra-banner-portrait { animation: none; } }
+/* Command Center settings: glass drawer sliding in from the right */
+.settings-glass { background: var(--command-glass); backdrop-filter: blur(22px) saturate(140%); border-left: 1px solid var(--border); box-shadow: var(--command-depth-shadow); }
+.settings-slide { animation: settings-in .45s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes settings-in { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+.restricted-banner { background: var(--danger); color: var(--primary-foreground); }
