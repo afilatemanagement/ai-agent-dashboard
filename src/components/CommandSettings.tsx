@@ -9,6 +9,7 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ServerOps } from "@/components/ServerOps";
 import { AgentBrain } from "@/components/AgentBrain";
+import { AuditLogs } from "@/components/EnterpriseOps";
 
 export const ROLES = ["Super Admin", "Franchise", "Normal User", "Ayra Agent"] as const;
 export const ROLE_PERMS = [
@@ -79,12 +80,14 @@ export function CommandSettings({ onClose }: { onClose: () => void }) {
           <p className="text-sm text-muted-foreground">Loading…</p>
         ) : (
           <Tabs defaultValue="roles">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid h-auto w-full grid-cols-3">
               <TabsTrigger value="roles" className="text-xs">Roles & Permissions</TabsTrigger>
               <TabsTrigger value="system" className="text-xs">System Control</TabsTrigger>
               <TabsTrigger value="ai" className="text-xs">AI Settings</TabsTrigger>
               <TabsTrigger value="brain" className="text-xs">Agent Brain</TabsTrigger>
+              <TabsTrigger value="audit" className="text-xs">Audit Logs</TabsTrigger>
             </TabsList>
+            <TabsContent value="audit" className="mt-5"><AuditLogs /></TabsContent>
 
             <TabsContent value="roles" className="mt-5 grid gap-5">
               <div>

@@ -22,8 +22,10 @@ import {
   CircleDot,
   Sparkles,
   Cog,
+  Activity,
 } from "lucide-react";
 import { CommandSettings, useCenterConfig } from "@/components/CommandSettings";
+import { NotificationBell, OpsDashboard } from "@/components/EnterpriseOps";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
@@ -97,6 +99,7 @@ function Dashboard() {
   const [hidden, setHidden] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [opsOpen, setOpsOpen] = useState(false);
   const { cfg } = useCenterConfig();
   useEffect(() => {
     const v = () => setHidden(document.hidden);
@@ -262,15 +265,21 @@ function Dashboard() {
           >
             <Menu className="h-6 w-6 text-primary" />
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setSettingsOpen(true)}
-            aria-label="Open Ayra Command Center settings"
-            className="absolute right-3 top-8 z-20 rounded-full"
-          >
-            <Cog className="h-6 w-6 text-primary" />
-          </Button>
+          <div className="absolute right-3 top-8 z-20 flex items-center gap-1">
+            <Button variant="ghost" size="icon" onClick={() => setOpsOpen(true)} aria-label="Open Ayra Operations Dashboard" className="rounded-full">
+              <Activity className="h-5 w-5 text-primary" />
+            </Button>
+            <NotificationBell />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setSettingsOpen(true)}
+              aria-label="Open Ayra Command Center settings"
+              className="rounded-full"
+            >
+              <Cog className="h-6 w-6 text-primary" />
+            </Button>
+          </div>
           <div hidden={!isWorkspaceRunning(workspaceTask)} className="preserved-action-workspace">
             <ActionWorkspace task={workspaceTask} onTask={setWorkspaceTask} />
           </div>
@@ -374,6 +383,7 @@ function Dashboard() {
         />
       )}
       {settingsOpen && <CommandSettings onClose={() => setSettingsOpen(false)} />}
+      {opsOpen && <OpsDashboard onClose={() => setOpsOpen(false)} />}
       {lookbook && (
         <LookbookPanel
           current={lookOverride}
