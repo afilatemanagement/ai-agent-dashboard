@@ -11,6 +11,7 @@ export function AyraChat({ onClose }: { onClose: () => void }) {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [draft, setDraft] = useState("");
   const [typing, setTyping] = useState(false);
+  const [listening, setListening] = useState(false);
   const end = useRef<HTMLDivElement>(null);
   useEffect(() => end.current?.scrollIntoView({ behavior: "smooth" }), [messages, typing]);
 
@@ -22,6 +23,7 @@ export function AyraChat({ onClose }: { onClose: () => void }) {
     const command = (prev ? `Earlier:\n${prev.slice(-280)}\nNow: ` : "") + text;
     setMessages((m) => [...m, { role: "user", text }]);
     setTyping(true);
+    const t0 = Date.now();
     try {
       const res = await fetch("/api/ayra", {
         method: "POST",
@@ -39,6 +41,8 @@ export function AyraChat({ onClose }: { onClose: () => void }) {
         out += dec.decode(value, { stream: true });
         if (!started) {
           started = true;
+          const wait = 1500 - (Date.now() - t0);
+          if (wait > 0) await new Promise((r) => setTimeout(r, wait));
           setTyping(false);
           setMessages((m) => [...m, { role: "ayra", text: out }]);
         } else setMessages((m) => [...m.slice(0, -1), { role: "ayra", text: out }]);
@@ -78,6 +82,8 @@ export function AyraChat({ onClose }: { onClose: () => void }) {
           <div ref={end} />
         </div>
         <div className="mt-3 flex items-center gap-2 rounded-full border border-border bg-background/60 px-3 py-1.5">
+          <button onClick={() => setListening((l) => !l)} aria-label={listening ? "Stop listening" : "Start listening"} aria-pressed={listening} className={`grid h-8 w-8 place-items-center rounded-full border border-primary/50 ${listening ? "bg-primary/20" : ""}`}><Mic className="h-4 w-4 text-primary" /></button>
+          {listening && <div className="listen-wave" aria-label="Listening">{[0, 1, 2, 3, 4].map((i) => <span key={i} style={{ animationDelay: `${i * 0.12}s` }} />)}</div>}
           <input value={draft} onChange={(e) => setDraft(e.target.value)} onKeyDown={(e) => e.key === "Enter" && void send()} aria-label="Message AYRA" placeholder="Message AYRA…" className="min-w-0 flex-1 bg-transparent text-sm outline-none" />
           <button onClick={() => void send()} aria-label="Send message" className="grid h-8 w-8 place-items-center rounded-full bg-primary text-primary-foreground"><Send className="h-4 w-4" /></button>
         </div>

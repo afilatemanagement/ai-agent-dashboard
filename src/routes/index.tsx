@@ -258,6 +258,11 @@ function Dashboard() {
           <Suspense fallback={null}>
             <CommandCenterScene tilt={tilt} running={isWorkspaceRunning(workspaceTask)} />
           </Suspense>
+          <div className="ayra-ticker" aria-label="Sample activity ticker (demo)">
+        <div>
+          <span>DEMO · Ayra: Scanning VPS ports...</span><span>Ayra: Fetching GitHub data...</span><span>Ayra: Listening for commands...</span>
+        </div>
+      </div>
           <Button
             variant="ghost"
             size="icon"
@@ -351,6 +356,11 @@ function Dashboard() {
           >
             <Mic className="h-6 w-6 text-primary" />
           </button>
+          {core === "listening" && (
+            <div className="listen-wave" aria-label="Listening">
+              {[0, 1, 2, 3, 4].map((i) => <span key={i} style={{ animationDelay: `${i * 0.12}s` }} />)}
+            </div>
+          )}
           <input
             ref={inputRef}
             title="Focus with Ctrl+K"
@@ -380,11 +390,6 @@ function Dashboard() {
           </button>
         </div>
       </main>
-      <div className="ayra-ticker" aria-label="Sample activity ticker (demo)">
-        <div>
-          <span>DEMO · Ayra: Scanning VPS ports...</span><span>Ayra: Fetching GitHub data...</span><span>Ayra: Listening for commands...</span>
-        </div>
-      </div>
       {open !== null && nav[open] && (
         <ModulePanel
           index={open}
