@@ -3,18 +3,15 @@ import { applyTheme, type DressCode } from "@/lib/agent-dress-code";
 import ayraDefault from "@/assets/ayra-cyan.jpg";
 import ayraCyanSide from "@/assets/ayra-cyan-side.jpg";
 import ayraCyanJacket from "@/assets/ayra-cyan-jacket.jpg";
-import ayraBraids from "@/assets/ayra-braids.jpg";
 import ayraAmberSide from "@/assets/ayra-amber-side.jpg";
 import ayraAmberFront from "@/assets/ayra-amber-front.jpg";
 import ayraAmberProfile from "@/assets/ayra-amber-profile.jpg";
-import ayraViolet from "@/assets/ayra-violet.jpg";
 import ayraHeadset from "@/assets/ayra-headset.jpg";
 import ayraGold from "@/assets/ayra-gold.jpg";
 import ayraBob from "@/assets/ayra-bob.jpg";
 import ayraCrystal from "@/assets/ayra-crystal.jpg";
 import ayraVeil from "@/assets/ayra-veil.jpg";
 import ayraCinematic from "@/assets/ayra-cinematic.jpg";
-import ayraCommandCutout from "@/assets/ayra-command-cutout.png";
 import ayraWalk from "@/assets/videos/ayra-idle-loop.mp4.asset.json";
 import softwareValaLogo from "@/assets/software-vala-logo.png";
 import ayraNamaste from "@/assets/videos/ayra-namaste.mp4.asset.json";
@@ -50,11 +47,9 @@ export const AYRA_LOOKS = {
   default: ayraDefault,
   cyanSide: ayraCyanSide,
   cyanJacket: ayraCyanJacket,
-  braids: ayraBraids,
   amberSide: ayraAmberSide,
   amberFront: ayraAmberFront,
   amberProfile: ayraAmberProfile,
-  violet: ayraViolet,
   headset: ayraHeadset,
   gold: ayraGold,
   bob: ayraBob,
@@ -70,7 +65,7 @@ const stateLook: Record<CoreState, AyraLook> = {
   listening: "headset",
   thinking: "cyanSide",
   executing: "amberProfile",
-  verifying: "braids",
+  verifying: "cyanSide",
   speaking: "cyanJacket",
   completed: "amberFront",
   error: "bob",
@@ -102,7 +97,6 @@ export const LOOK_THEME: Record<AyraLook, { primary: number; accent: number; c?:
   default: { primary: 235, accent: 210 },
   cyanSide: { primary: 230, accent: 205 },
   cyanJacket: { primary: 225, accent: 200 },
-  braids: { primary: 220, accent: 195 },
   headset: { primary: 240, accent: 215 },
   veil: { primary: 215, accent: 195 },
   amberSide: { primary: 60, accent: 75 },
@@ -110,7 +104,6 @@ export const LOOK_THEME: Record<AyraLook, { primary: number; accent: number; c?:
   amberProfile: { primary: 55, accent: 72 },
   bob: { primary: 45, accent: 65 },
   gold: { primary: 85, accent: 95, c: 0.14 },
-  violet: { primary: 300, accent: 285 },
   crystal: { primary: 310, accent: 290 },
 };
 
@@ -119,11 +112,9 @@ export const LOOK_NAMES: Record<AyraLook, string> = {
   default: "Cyan Classic",
   cyanSide: "Cyan Profile",
   cyanJacket: "Cyan Jacket",
-  braids: "Cyan Braids",
   amberSide: "Amber Side",
   amberFront: "Amber Armor",
   amberProfile: "Amber Glow",
-  violet: "Violet Chrome",
   headset: "Headset",
   gold: "Gold Headpiece",
   bob: "Orange Bob",
@@ -136,11 +127,9 @@ export const LOOK_BG: Record<AyraLook, string> = {
   default: "#e4e5e9",
   cyanSide: "#c5c2c4",
   cyanJacket: "#d8d8e0",
-  braids: "#59819b",
   amberSide: "#e4e4e9",
   amberFront: "#dedfe3",
   amberProfile: "#aaabad",
-  violet: "#e4e8f0",
   headset: "#b2b4be",
   gold: "#cec8c1",
   bob: "#bbd3e8",
@@ -246,7 +235,7 @@ export function JarvisCore({
             {(Object.keys(AYRA_LOOKS) as AyraLook[]).map((k) => (
               <img
                 key={k}
-                  src={k === "default" ? ayraCommandCutout : AYRA_LOOKS[k]}
+                  src={AYRA_LOOKS[k]}
                 alt={k === look ? "AYRA holographic AI avatar" : ""}
                 aria-hidden={k !== look}
                 width={768}
