@@ -12,7 +12,7 @@ const card = "rounded-md border border-border/60 bg-muted/30 p-3 text-xs";
 const btn = "rounded border border-border px-2 py-1 text-[10px] font-semibold hover:bg-muted";
 const primary = "flex items-center justify-center gap-2 rounded-md border border-primary px-3 py-2 text-xs font-semibold text-primary hover:bg-primary/10";
 
-const DemoTag = () => <span className="rounded bg-warning/20 px-1.5 text-[9px] text-warning">DEMO</span>;
+const DemoTag = () => <span className="rounded bg-accent/20 px-1.5 text-[9px] text-accent">DEMO</span>;
 
 export function ServerOps() {
   const [procs, setProcs] = useState<Proc[]>([
