@@ -710,7 +710,7 @@ html, body { overflow-x: hidden; }
 .aw-chip { font-size: 14px; padding: 0 .9rem; gap: .55rem; white-space: nowrap; }
 .aw-agents { top: 455px; bottom: 230px; }
 @media (max-width: 640px) {
-  .aw-stage .absolute.bottom-4.left-11 { left: 12px; right: 12px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .aw-chips { left: 12px !important; right: 12px !important; flex-wrap: nowrap !important; overflow-x: auto; scrollbar-width: none; }
   .aw-stage .aw-chip { flex: none; }
-  .aw-motion { top: auto; bottom: 250px; right: 10px; }
+  .aw-motion { top: auto !important; bottom: 250px; right: 10px; }
 }

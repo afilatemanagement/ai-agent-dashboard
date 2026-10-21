@@ -127,7 +127,7 @@ export function AgentStage({ core, look, setLook, reply, muted, setMuted, onTalk
         {listening ? "Listening..." : core === "idle" ? "Standing by" : "Working..."}
         <div className={`aw-wave ${listening || core === "speaking" ? "live" : ""}`}>{Array.from({ length: 30 }, (_, i) => <span key={i} style={{ animationDelay: `${(i % 10) * 0.08}s`, height: `${20 + ((i * 37) % 80)}%` }} />)}</div>
       </div>
-      <div className="absolute bottom-4 left-11 right-3 flex flex-wrap gap-x-2.5 gap-y-2.5">
+      <div className="aw-chips absolute bottom-4 left-11 right-3 flex flex-wrap gap-x-2.5 gap-y-2.5">
         <button className="aw-chip" onClick={() => onShortcut("Check my Facebook", "https://www.facebook.com")}><Globe className="h-5 w-5" />Check my Facebook</button>
         <button className="aw-chip" onClick={() => onShortcut("Open GitHub and show my repositories", "https://github.com")}><Github className="h-5 w-5" />Open GitHub and show my repositories</button>
         <button className="aw-chip" onClick={() => onShortcut("Create a new project")}><Plus className="h-5 w-5" />Create a new project</button>
