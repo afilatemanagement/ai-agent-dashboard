@@ -126,9 +126,9 @@ export function CommandSettings({ onClose }: { onClose: () => void }) {
                   max={100}
                   step={1}
                   value={[brightness ?? cfg.brightness]}
-                  onValueChange={([v]) => setBrightness(v)}
+                  onValueChange={([v]) => setBrightness(v ?? 0)}
                   onValueCommit={([v]) => {
-                    update({ brightness: v });
+                    update({ brightness: v ?? 0 });
                     setBrightness(null);
                   }}
                 />
