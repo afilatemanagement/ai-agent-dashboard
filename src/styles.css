@@ -632,3 +632,14 @@ html, body { overflow-x: hidden; }
 .listen-wave span { width: 3px; height: 100%; border-radius: 3px; background: var(--primary); box-shadow: 0 0 6px var(--primary); animation: listen-bar .9s ease-in-out infinite; }
 @keyframes listen-bar { 0%,100% { transform: scaleY(.25); } 50% { transform: scaleY(1); } }
 @media (prefers-reduced-motion: reduce) { .immersive-dashboard .dashboard-hero .ayra-banner-portrait, .immersive-dashboard .dashboard-hero .ayra-banner-portrait > *, .listen-wave span { animation: none; } }
+/* Per-look motion clip above the still photo; name tag under each agent */
+.immersive-dashboard .dashboard-hero .ayra-banner-portrait > .ayra-look-video { z-index: 2; object-fit: cover; object-position: center top; animation: none; }
+.immersive-dashboard .dashboard-hero .ayra-banner-portrait > .ayra-look-video[data-fit="contain"] { object-fit: contain; object-position: center bottom; }
+.immersive-dashboard .dashboard-hero .ayra-banner-portrait > .ayra-name-tag { position: absolute; z-index: 4; inset: auto auto 6% 50%; width: auto; height: auto; translate: -50% 0; animation: none;
+  padding: 2px 12px; border-radius: 999px; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--primary);
+  background: color-mix(in oklab, var(--background) 70%, transparent); border: 1px solid color-mix(in oklab, var(--primary) 45%, transparent); backdrop-filter: blur(6px); }
+/* Every agent fully in frame: head to shoulders, no zoom-crop (verified per look) */
+.immersive-dashboard .dashboard-hero .ayra-banner-portrait .ayra-banner-look,
+.immersive-dashboard .dashboard-hero .ayra-banner-portrait > .ayra-look-video,
+.immersive-dashboard .dashboard-hero .ayra-banner-portrait .ayra-banner-video { object-fit: contain !important; object-position: center bottom !important; }
+.immersive-dashboard .dashboard-hero .ayra-banner-portrait > .ayra-look-video[data-fit="cover"] { object-fit: cover !important; object-position: center 20% !important; }
