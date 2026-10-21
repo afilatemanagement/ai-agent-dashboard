@@ -8,5 +8,5 @@
 - [x] Clone AYRA's World design as home screen with all agents in agent rail
 - [x] Connect Automate/Screenshot/Download tabs; Talk/Mute use real microphone
 - [x] Test every agent at desktop + mobile (sizing, motion); blend agent photos into AYRA's World (replace white bg), keep names/proportions
-- [ ] Talk/Mute: real mic permission, blocked + unsupported states, tested
-- [ ] Finish remaining reference match, summarize differences
+- [x] Talk/Mute: real mic permission, blocked + unsupported states, tested
+- [x] Finish remaining reference match, summarize differences
