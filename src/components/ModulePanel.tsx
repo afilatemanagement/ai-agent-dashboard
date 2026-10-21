@@ -12,6 +12,7 @@ import {
   saveSetting,
   securityStatus,
 } from "@/lib/admin.functions";
+import { AccessPanel } from "@/components/AccessPanel";
 
 const transitions = ["anim-holo", "anim-warp", "anim-slide", "anim-iris"];
 export type ModuleId = "settings" | "roles" | "security";
@@ -56,6 +57,7 @@ export function ModulePanel({
             <X className="h-4 w-4" />
           </button>
         </div>
+        <AccessPanel />
         {id === "settings" && <SettingsModule />}
         {id === "roles" && <RolesModule />}
         {id === "security" && <SecurityModule />}

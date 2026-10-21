@@ -50,6 +50,10 @@ export function CommandSettings({ onClose }: { onClose: () => void }) {
             <X className="h-4 w-4" />
           </button>
         </div>
+        <AccessPanel />
+        {myRole !== "Super Admin" && !loading && (
+          <p className="mb-4 text-xs text-muted-foreground">Only Super Admin can change these settings. Changes by other roles are refused by the server.</p>
+        )}
         {loading ? (
           <p className="text-sm text-muted-foreground">Loading…</p>
         ) : (
