@@ -21,14 +21,12 @@ export function createLovableAiGatewayRunIdFetch(initialRunId?: string) {
 
 const AYRA_SYSTEM = `You are AYRA, the female AI command-center assistant of Software Vala.
 The dashboard has three modules: Settings, Roles & Permissions, and Security.
-In normal conversation, talk like a friendly human colleague and match the user's language (Hindi, Hinglish or English).
 Reply in character: concise (2-4 sentences), confident, warm, task-specific.
 If the command asks to open one of those modules, confirm you are opening it.
 Never invent numbers, records, customers, sales or any other data you were not given; if asked for data you do not have, say so plainly.`;
 
 /** Stream AYRA's reply for a user command. Consumed by the /api/ayra route. */
-export type ChatTurn = { role: "user" | "assistant"; content: string };
-export function streamAyraReply(request: Request, command: string, history: ChatTurn[] = []) {
+export function streamAyraReply(request: Request, command: string) {
   const apiKey = process.env["LOVABLE_API_KEY"];
   if (!apiKey) throw new Error("LOVABLE_API_KEY is not configured");
   const runIdFetch = createLovableAiGatewayRunIdFetch(
@@ -40,10 +38,7 @@ export function streamAyraReply(request: Request, command: string, history: Chat
     headers: { "Lovable-API-Key": apiKey, "X-Lovable-AIG-SDK": "vercel-ai-sdk" },
     fetch: runIdFetch.fetch,
   });
-  const messages: ModelMessage[] = [
-    ...history.map((t) => ({ role: t.role, content: t.content }) as ModelMessage),
-    { role: "user", content: command },
-  ];
+  const messages: ModelMessage[] = [{ role: "user", content: command }];
   return streamText({
     model: provider.responses("openai/gpt-6-astra"),
     system: AYRA_SYSTEM,

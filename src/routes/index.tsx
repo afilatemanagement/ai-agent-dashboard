@@ -21,7 +21,6 @@ import {
   Send,
   CircleDot,
   Sparkles,
-  MessageSquare,
 } from "lucide-react";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -30,14 +29,8 @@ import { isWorkspaceRunning } from "@/lib/command-center";
 import { JarvisCore, stateLabel, type CoreState, type AyraLook } from "@/components/JarvisCore";
 import { ModulePanel, type ModuleId } from "@/components/ModulePanel";
 import { LookbookPanel } from "@/components/LookbookPanel";
-import { IdeWorkspace } from "@/components/IdeWorkspace";
-import { ChatPanel } from "@/components/ChatPanel";
-import { useQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
-import { listSettings } from "@/lib/admin.functions";
-import { readControl } from "@/lib/control-state";
+import { ActionWorkspace } from "@/components/ActionWorkspace";
 import { applyTaskEvent, type TaskEvent, type WorkspaceTask } from "@/lib/workspace-events";
-import { useBannerThemeCycle } from "@/lib/theme-cycle";
 const CommandCenterScene = lazy(() => import("@/components/CommandCenterScene"));
 
 export const Route = createFileRoute("/")({
@@ -101,13 +94,6 @@ function Dashboard() {
   const [tilt, setTilt] = useState<[number, number]>([0, 0]);
   const [hidden, setHidden] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const palette = useBannerThemeCycle();
-  const [chatOpen, setChatOpen] = useState(false);
-  const settingsFn = useServerFn(listSettings);
-  const settingsQ = useQuery({ queryKey: ["settings"], queryFn: () => settingsFn() });
-  const { systemControlState } = readControl(settingsQ.data);
-  // Controlled by AI task state only — true while AYRA is executing a task.
-  const agentNeedsWorkspace = isWorkspaceRunning(workspaceTask);
   useEffect(() => {
     const v = () => setHidden(document.hidden);
     const k = (e: KeyboardEvent) => {
@@ -217,10 +203,7 @@ function Dashboard() {
     setOpen(i);
   };
   return (
-    <div
-      className={`immersive-dashboard min-h-screen text-foreground ${hidden || open !== null ? "paused" : ""}`}
-      style={{ filter: systemControlState.brightness < 100 ? `brightness(${systemControlState.brightness / 100})` : undefined }}
-    >
+    <div className={`immersive-dashboard min-h-screen text-foreground ${hidden || open !== null ? "paused" : ""}`}>
       <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
         <SheetContent side="left" className="command-navigation" aria-describedby={undefined}>
           <SheetTitle className="font-display text-primary">Software Vala</SheetTitle>
@@ -244,18 +227,9 @@ function Dashboard() {
       </Sheet>
 
       <main className="dashboard-main grid min-w-0 content-start gap-4 px-3 py-3">
-        {/*
-          AI-controlled layout. `agentNeedsWorkspace` is derived ONLY from AYRA's live task state —
-          no user click changes it. To connect another AI backend later:
-
-          function triggerAgentWorkspace(needed: boolean) {
-            // e.g. set a running WorkspaceTask when the agent starts browsing,
-            // and mark it completed/error when the agent finishes.
-          }
-        */}
         <section
-          className="ayra-split"
-          data-workspace={agentNeedsWorkspace}
+          className="dashboard-hero relative"
+          data-task-running={isWorkspaceRunning(workspaceTask)}
           onMouseMove={(e) => {
             const b = e.currentTarget.getBoundingClientRect();
             setTilt([(e.clientX - b.left) / b.width - 0.5, (e.clientY - b.top) / b.height - 0.5]);
@@ -263,7 +237,7 @@ function Dashboard() {
           onMouseLeave={() => setTilt([0, 0])}
         >
           <Suspense fallback={null}>
-            <CommandCenterScene tilt={tilt} running={agentNeedsWorkspace} />
+            <CommandCenterScene tilt={tilt} running={isWorkspaceRunning(workspaceTask)} />
           </Suspense>
           <Button
             variant="ghost"
@@ -276,50 +250,39 @@ function Dashboard() {
           >
             <Menu className="h-6 w-6 text-primary" />
           </Button>
-
-          <div className="split-agent">
-            <div className="split-avatar">
-              <JarvisCore
-                state={core}
-                tilt={tilt}
-                override={lookOverride}
-                commandKey={workspaceTask?.id ?? null}
-              />
-            </div>
-            <div className="split-workspace" aria-hidden={!agentNeedsWorkspace}>
-              <div className="split-workspace-label font-display">LIVE BROWSER / WORKSPACE</div>
-              <IdeWorkspace task={workspaceTask} onTask={setWorkspaceTask} />
-            </div>
+          <div hidden={!isWorkspaceRunning(workspaceTask)} className="preserved-action-workspace">
+            <ActionWorkspace task={workspaceTask} onTask={setWorkspaceTask} />
           </div>
-
-          <div className="split-brand" aria-hidden={agentNeedsWorkspace}>
-            <div className="split-brand-logo font-display">SOFTECH</div>
-            <div className="font-display text-xs tracking-[0.4em] text-accent">
-              {palette.name.toUpperCase()} · AYRA AI COMMAND CENTER
+          <div className="hero-identity relative min-w-0 text-center md:text-left">
+            <div className="pt-3 font-display text-3xl font-black tracking-[0.3em] text-primary glow-text">
+              AYRA
             </div>
+            <div className="font-display text-[10px] tracking-[0.3em] text-accent">AI COMMAND CENTER</div>
             <button
               onClick={() => setLookbook(true)}
-              className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 font-display text-[10px] tracking-widest text-primary transition hover:bg-primary/20"
+              className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 font-display text-[10px] tracking-widest text-primary transition hover:bg-primary/20"
             >
               <Sparkles className="h-3 w-3" />
               LOOKBOOK
             </button>
-            <button
-              onClick={() => setChatOpen(true)}
-              className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 font-display text-[10px] tracking-widest text-primary transition hover:bg-primary/20"
-            >
-              <MessageSquare className="h-3 w-3" />
-              CHAT WITH AYRA
-            </button>
-            <div aria-live="polite" className="mt-2 text-xs text-muted-foreground">
+            <div aria-live="polite" className="mt-1 text-xs text-muted-foreground">
               {stateLabel[core]}
             </div>
             {reply && (
-              <div className="split-reply anim-fade-up mt-3 px-4 py-2 text-left text-sm leading-relaxed text-foreground">
+              <div className="panel anim-fade-up mx-auto mt-2 max-w-md px-4 py-2 text-left text-sm leading-relaxed text-foreground">
                 <span className="mr-1 font-display text-[10px] tracking-widest text-accent">AYRA:</span>
                 {reply}
               </div>
             )}
+          </div>
+
+          <div className="hero-avatar relative min-w-0">
+            <JarvisCore
+              state={core}
+              tilt={tilt}
+              override={lookOverride}
+              commandKey={workspaceTask?.id ?? null}
+            />
           </div>
         </section>
         <div className="hero-streams office-streams relative grid grid-cols-2 gap-3 p-3">
@@ -393,7 +356,6 @@ function Dashboard() {
           onClose={() => setOpen(null)}
         />
       )}
-      <ChatPanel open={chatOpen} onClose={() => setChatOpen(false)} />
       {lookbook && (
         <LookbookPanel
           current={lookOverride}
