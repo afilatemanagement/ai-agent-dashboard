@@ -17,3 +17,8 @@ export const attachAccessToken = createMiddleware({ type: "function" }).client(a
   const t = getAccessToken();
   return next({ headers: t ? { [ACCESS_HEADER]: t } : {} });
 });
+
+export function accessHeaders(): Record<string, string> {
+  const t = getAccessToken();
+  return t ? { [ACCESS_HEADER]: t } : {};
+}

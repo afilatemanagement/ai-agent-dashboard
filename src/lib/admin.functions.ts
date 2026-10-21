@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { CENTER_KEY, MODULE_PERMS, ROLES } from "./access";
-import { adminDb as db, currentRole, hashPin, requirePerm, requireSuperAdmin, signToken } from "./access.server";
+import { CENTER_KEY, GATED, isAllowed, MODULE_PERMS, ROLES } from "./access";
+import { adminDb as db, currentRole, loadConfig, hashPin, requirePerm, requireSuperAdmin, signToken } from "./access.server";
 
 export const PERMISSIONS = [
   "settings.view",
@@ -44,6 +44,14 @@ export const setRolePin = createServerFn({ method: "POST" })
     const { error } = await client.from("role_pins").upsert({ role: data.role, pin_hash: hash, salt, updated_at: new Date().toISOString() });
     if (error) throw new Error(error.message);
     return bootstrap ? { ok: true, token: await signToken("Super Admin") } : { ok: true, token: null };
+  });
+
+/** Server decides whether the current role may use a gated feature. */
+export const canUse = createServerFn({ method: "GET" })
+  .inputValidator((d: unknown) => z.object({ perm: z.enum(GATED as [string, ...string[]]) }).parse(d))
+  .handler(async ({ data }) => {
+    const role = await currentRole();
+    return { role, allowed: isAllowed(await loadConfig(), role, data.perm) };
   });
 
 // ---------- Command center config (public read, Super Admin write) ----------

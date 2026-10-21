@@ -1,3 +1,4 @@
+import { accessHeaders } from "@/lib/access-client";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Menu,
@@ -160,7 +161,7 @@ function Dashboard() {
     try {
       const res = await fetch("/api/ayra", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...accessHeaders() },
         body: JSON.stringify({ command }),
       });
       emit({ type: "headers", status: res.status, latencyMs: Math.round(performance.now() - started) });

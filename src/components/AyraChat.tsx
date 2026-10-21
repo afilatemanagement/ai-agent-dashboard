@@ -1,3 +1,4 @@
+import { accessHeaders } from "@/lib/access-client";
 import { useEffect, useRef, useState } from "react";
 import { Send, X } from "lucide-react";
 
@@ -22,7 +23,7 @@ export function AyraChat({ onClose }: { onClose: () => void }) {
     try {
       const res = await fetch("/api/ayra", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...accessHeaders() },
         body: JSON.stringify({ command: command.slice(-500) }),
       });
       if (!res.ok || !res.body) throw new Error();

@@ -28,8 +28,8 @@ export async function signToken(role: Role) {
 }
 
 /** Role from the signed access token on this request, or null. */
-export async function currentRole(): Promise<Role | null> {
-  const token = getRequestHeader(ACCESS_HEADER);
+export async function currentRole(raw?: string | null): Promise<Role | null> {
+  const token = raw ?? getRequestHeader(ACCESS_HEADER);
   if (!token) return null;
   const [body, sig] = token.split(".");
   if (!body || !sig) return null;
@@ -54,8 +54,8 @@ export async function loadConfig() {
 }
 
 /** Throws unless the caller's role is allowed this permission (checked on the server). */
-export async function requirePerm(perm: string) {
-  const role = await currentRole();
+export async function requirePerm(perm: string, raw?: string | null) {
+  const role = await currentRole(raw);
   if (!role) throw new Error("Locked: enter your role PIN to continue.");
   if (!isAllowed(await loadConfig(), role, perm)) throw new Error(`Access denied: ${role} does not have "${perm}" right now.`);
   return role;
