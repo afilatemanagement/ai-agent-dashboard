@@ -704,3 +704,5 @@ html, body { overflow-x: hidden; }
 @media (max-width: 1100px) { .aw-main { grid-template-columns: 1fr; } .aw-top { flex-wrap: wrap; height: auto; padding: .5rem; } }
 .aw-chip { font-size: 14px; padding: 0 .9rem; gap: .55rem; white-space: nowrap; }
 .aw-agents { top: 455px; bottom: 230px; }
+.aw-look { inset: 40px 0 120px; }
+.aw-look > * { object-fit: cover !important; object-position: center 15% !important; -webkit-mask-image: radial-gradient(ellipse 36% 52% at 50% 45%, black 55%, transparent 100%); mask-image: radial-gradient(ellipse 36% 52% at 50% 45%, black 55%, transparent 100%); }
