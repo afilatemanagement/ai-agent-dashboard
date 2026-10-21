@@ -1,9 +1,11 @@
 {
   "version": 1,
-  "asset_id": "06c61464-8970-4256-b5bb-514e0dd93221",
-  "project_id": "384816b1-c068-42d8-8581-80cf6ad35a4f",
-  "url": "/__l5e/assets-v1/06c61464-8970-4256-b5bb-514e0dd93221/ayra-wave.mp4",
+  "asset_id": "68bda5ad-22f6-4f5a-a367-49b0405c9bb5",
+  "project_id": "4634b234-580b-4de5-816e-51eea0e40cfb",
+  "url": "/__l5e/assets-v1/68bda5ad-22f6-4f5a-a367-49b0405c9bb5/ayra-wave.mp4",
+  "r2_key": "a/v1/4634b234-580b-4de5-816e-51eea0e40cfb/68bda5ad-22f6-4f5a-a367-49b0405c9bb5/ayra-wave.mp4",
   "original_filename": "ayra-wave.mp4",
   "size": 5103874,
-  "created_at": "2026-10-20T20:32:33Z"
+  "content_type": "video/mp4",
+  "created_at": "2026-10-21T19:06:27Z"
 }
