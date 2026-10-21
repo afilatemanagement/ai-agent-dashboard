@@ -642,3 +642,4 @@ html, body { overflow-x: hidden; }
 .immersive-dashboard .dashboard-hero .ayra-banner-portrait .ayra-banner-look,
 .immersive-dashboard .dashboard-hero .ayra-banner-portrait > .ayra-look-video,
 .immersive-dashboard .dashboard-hero .ayra-banner-portrait .ayra-banner-video { object-fit: contain !important; object-position: center bottom !important; }
+.immersive-dashboard .dashboard-hero .ayra-banner-portrait > .ayra-look-video[data-fit="cover"] { object-fit: cover !important; object-position: center 20% !important; }

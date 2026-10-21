@@ -81,7 +81,7 @@ const LOOK_VIDEO: Partial<Record<AyraLook, string>> = {
   veil: v_veil.url,
 };
 /** Per-look framing so every agent's face, neck and shoulders fit the screen. */
-const LOOK_FIT: Partial<Record<AyraLook, string>> = { default: "contain" };
+const LOOK_FIT: Partial<Record<AyraLook, string>> = { default: "cover" };
 const CLIP_LOOK: AyraLook = "cyanJacket";
 
 /** Which look AYRA wears per core state (when no occasion overrides it). */
