@@ -58,18 +58,24 @@ export type Database = {
       }
       role_pins: {
         Row: {
+          failed_attempts: number
+          locked_until: string | null
           pin_hash: string
           role: string
           salt: string
           updated_at: string
         }
         Insert: {
+          failed_attempts?: number
+          locked_until?: string | null
           pin_hash: string
           role: string
           salt: string
           updated_at?: string
         }
         Update: {
+          failed_attempts?: number
+          locked_until?: string | null
           pin_hash?: string
           role?: string
           salt?: string
