@@ -608,3 +608,6 @@ html, body { overflow-x: hidden; }
   .ayra-split .split-agent { flex-basis: 45%; }
   .ayra-split .split-brand { padding: 16px; }
 }
+.immersive-dashboard .dashboard-main { grid-template-columns: minmax(0, 1fr) !important; }
+.immersive-dashboard .dashboard-main > * { grid-column: 1 / -1 !important; }
+.ayra-split .split-brand-logo { font-size: clamp(36px, 6.5vw, 110px); }
