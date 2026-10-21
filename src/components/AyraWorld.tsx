@@ -73,9 +73,9 @@ export function TopBar({ cmd, setCmd, onRun, listening, onMic, onTools, onSettin
   );
 }
 
-export function AgentStage({ core, look, setLook, reply, muted, setMuted, onTalk, onEnd, onShortcut }: {
+export function AgentStage({ core, look, setLook, reply, muted, micNote, micState, setMuted, onTalk, onEnd, onShortcut }: {
   core: CoreState; look: AyraLook | null; setLook: (l: AyraLook | null) => void; reply: string;
-  muted: boolean; setMuted: (m: boolean) => void; onTalk: () => void; onEnd: () => void; onShortcut: (cmd: string, url?: string) => void;
+  muted: boolean; micNote?: string; micState?: string; setMuted: (m: boolean) => void; onTalk: () => void; onEnd: () => void; onShortcut: (cmd: string, url?: string) => void;
 }) {
   const listening = core === "listening";
   const looks = Object.keys(AYRA_LOOKS) as AyraLook[];
