@@ -68,7 +68,7 @@ export const AYRA_LOOKS = {
 } as const;
 export type AyraLook = keyof typeof AYRA_LOOKS;
 /** Each look's own motion clip (blinks, breathes, turns) — same outfit as the photo. */
-const LOOK_VIDEO: Partial<Record<AyraLook, string>> = {
+export const LOOK_VIDEO: Partial<Record<AyraLook, string>> = {
   default: v_default.url,
   cyanSide: v_cyanSide.url,
   cyanJacket: v_cyanJacket.url,
