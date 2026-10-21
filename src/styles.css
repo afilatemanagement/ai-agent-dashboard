@@ -555,3 +555,60 @@ html, body { overflow-x: hidden; }
 @media (max-width: 767px) { .ayra-office-logo { left: 50%; top: 77%; width: 78%; z-index: 2; } }
 /* AYRA's full face visible and centred (no zoom-crop) */
 .immersive-dashboard .dashboard-hero .ayra-banner-video, .immersive-dashboard .dashboard-hero .ayra-banner-look { object-fit: contain; object-position: center center; }
+
+/* ===== AYRA 40/60 split banner (AI-controlled workspace) ===== */
+:root { --banner-bg-a: oklch(0.16 0.05 80); --banner-bg-b: oklch(0.1 0.04 95); }
+:root, .ayra-split, .ayra-split * {
+  transition-property: background-color, color, border-color, box-shadow, fill, stroke;
+  transition-duration: 1.2s;
+}
+.ayra-split {
+  position: relative; display: flex; width: 100%; overflow: hidden;
+  min-height: min(880px, max(560px, calc(100svh - 110px)));
+  border-radius: 0 0 36px 36px; border-bottom: 1px solid var(--border);
+  background: radial-gradient(120% 90% at 20% 20%, var(--banner-bg-a), var(--banner-bg-b));
+  isolation: isolate;
+}
+.ayra-split .split-agent {
+  position: relative; flex: 0 0 40%; min-width: 0;
+  transition: flex-basis .8s cubic-bezier(.65,0,.35,1);
+  border-right: 1px solid var(--border);
+}
+.ayra-split .split-avatar { position: absolute; inset: 0; transition: opacity .6s ease, transform .8s ease; }
+.ayra-split .split-avatar .ayra-banner-portrait { left: 0 !important; right: 0 !important; width: 100% !important; top: 20px; height: calc(100% - 20px) !important; }
+.ayra-split .split-avatar .hero-avatar, .ayra-split .split-avatar > * { position: absolute; inset: 0; z-index: 0; }
+.ayra-split .split-workspace {
+  position: absolute; inset: 16px; z-index: 3; display: flex; flex-direction: column; gap: 8px;
+  padding: 16px; border: 1px solid var(--border); border-radius: 20px;
+  background: color-mix(in oklab, var(--background) 55%, transparent);
+  backdrop-filter: blur(18px) saturate(140%);
+  opacity: 0; pointer-events: none; transform: scale(.97);
+  transition: opacity .6s ease .2s, transform .6s ease .2s;
+}
+.ayra-split .split-workspace-label { font-size: 11px; letter-spacing: .3em; color: var(--accent); }
+.ayra-split .split-brand {
+  flex: 1 1 60%; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 32px; text-align: center; z-index: 2;
+  transition: opacity .6s ease, transform .8s ease, flex-basis .8s cubic-bezier(.65,0,.35,1);
+}
+.ayra-split .split-brand-logo {
+  font-size: clamp(48px, 9vw, 140px); font-weight: 900; letter-spacing: .12em; line-height: 1;
+  color: var(--primary); text-shadow: 0 0 40px color-mix(in oklab, var(--primary) 55%, transparent);
+}
+.ayra-split .split-reply {
+  max-width: 520px; max-height: 200px; overflow-y: auto; border: 1px solid var(--border); border-radius: 16px;
+  background: color-mix(in oklab, var(--background) 50%, transparent); backdrop-filter: blur(14px);
+}
+.ayra-split[data-workspace="true"] .split-agent { flex-basis: 100%; border-right-color: transparent; }
+.ayra-split[data-workspace="true"] .split-brand { flex-basis: 0; padding: 0; opacity: 0; transform: translateX(40px); pointer-events: none; overflow: hidden; }
+.ayra-split[data-workspace="true"] .split-avatar { opacity: .18; transform: scale(1.04); }
+.ayra-split[data-workspace="true"] .split-workspace { opacity: 1; pointer-events: auto; transform: none; }
+.immersive-dashboard .dashboard-main > .ayra-split { margin-inline: 0; }
+@media (max-width: 720px) {
+  .ayra-split .split-agent { flex-basis: 45%; }
+  .ayra-split .split-brand { padding: 16px; }
+}
+.immersive-dashboard .dashboard-main { grid-template-columns: minmax(0, 1fr) !important; }
+.immersive-dashboard .dashboard-main > * { grid-column: 1 / -1 !important; }
+.ayra-split .split-brand-logo { font-size: clamp(36px, 6.5vw, 110px); }
+.ayra-split .ayra-office-wall, .ayra-split .ayra-office-logo { display: none; }
