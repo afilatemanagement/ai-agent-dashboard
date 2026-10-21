@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiAyraRouteImport } from './routes/api/ayra'
+import { Route as ApiScreenshotRouteImport } from './routes/api/screenshot'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +23,40 @@ const ApiAyraRoute = ApiAyraRouteImport.update({
   path: '/api/ayra',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiScreenshotRoute = ApiScreenshotRouteImport.update({
+  id: '/api/screenshot',
+  path: '/api/screenshot',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/api/ayra': typeof ApiAyraRoute
+  '/api/screenshot': typeof ApiScreenshotRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/api/ayra': typeof ApiAyraRoute
+  '/api/screenshot': typeof ApiScreenshotRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/api/ayra': typeof ApiAyraRoute
+  '/api/screenshot': typeof ApiScreenshotRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/ayra'
+  fullPaths: '/' | '/api/ayra' | '/api/screenshot'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/ayra'
-  id: '__root__' | '/' | '/api/ayra'
+  to: '/' | '/api/ayra' | '/api/screenshot'
+  id: '__root__' | '/' | '/api/ayra' | '/api/screenshot'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ApiAyraRoute: typeof ApiAyraRoute
+  ApiScreenshotRoute: typeof ApiScreenshotRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +75,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAyraRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/screenshot': {
+      id: '/api/screenshot'
+      path: '/api/screenshot'
+      fullPath: '/api/screenshot'
+      preLoaderRoute: typeof ApiScreenshotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApiAyraRoute: ApiAyraRoute,
+  ApiScreenshotRoute: ApiScreenshotRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { AYRA_LOOKS, LOOK_NAMES, LOOK_VIDEO, type AyraLook, type CoreState } from "@/components/JarvisCore";
 import stage from "@/assets/ayra-world-stage.jpg";
+import { accessHeaders } from "@/lib/access-client";
 
 export function AyraMark({ className = "" }: { className?: string }) {
   return (
@@ -140,11 +141,44 @@ const SHORTCUTS: [string, string, string][] = [
   ["Maps", "https://maps.google.com", "●"], ["Translate", "https://translate.google.com", "G"], ["Photos", "https://photos.google.com", "✿"],
 ];
 
-export function BrowserPanel() {
+function save(blob: Blob, name: string) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 30_000);
+}
+
+export function BrowserPanel({ onRun, reply, busy }: { onRun: (cmd: string) => void; reply: string; busy: boolean }) {
   const [tab, setTab] = useState("Browser");
   const [q, setQ] = useState("");
+  const [task, setTask] = useState("");
+  const [shotUrl, setShotUrl] = useState("");
+  const [shot, setShot] = useState<{ url: string; blob: Blob; name: string } | null>(null);
+  const [shotBusy, setShotBusy] = useState(false);
+  const [shotErr, setShotErr] = useState("");
   const open = (u: string) => window.open(u, "_blank", "noopener");
   const search = (lucky = false) => q.trim() && open(`https://www.google.com/search?q=${encodeURIComponent(q.trim())}${lucky ? "&btnI=1" : ""}`);
+  const automate = () => {
+    const t = task.trim();
+    if (!t) return;
+    const site = t.match(/https?:\/\/\S+|\b[a-z0-9-]+(\.[a-z0-9-]+)*\.(com|org|net|io|in|dev|app|ai|co)(\/\S*)?/i)?.[0];
+    if (site) open(/^https?:/i.test(site) ? site : `https://${site}`);
+    onRun(t);
+  };
+  const capture = async () => {
+    const u = shotUrl.trim();
+    if (!u) return;
+    setShotBusy(true); setShotErr("");
+    try {
+      const res = await fetch("/api/screenshot", { method: "POST", headers: { "Content-Type": "application/json", ...accessHeaders() }, body: JSON.stringify({ url: u }) });
+      if (!res.ok) { const d = (await res.json().catch(() => null)) as { error?: string } | null; throw new Error(d?.error ?? "Could not capture that page."); }
+      const blob = await res.blob();
+      if (shot) URL.revokeObjectURL(shot.url);
+      setShot({ url: URL.createObjectURL(blob), blob, name: u.replace(/^https?:\/\//, "").replace(/[^a-z0-9.-]+/gi, "_").slice(0, 60) });
+    } catch (e) { setShotErr(e instanceof Error ? e.message : "Could not capture that page."); }
+    finally { setShotBusy(false); }
+  };
   return (
     <section className="aw-panel flex min-h-0 flex-col p-3">
       <div className="flex items-center gap-4 px-2 pb-3">
@@ -189,8 +223,30 @@ export function BrowserPanel() {
               <button onClick={() => open("https://www.google.com")} className="flex w-20 flex-col items-center gap-2"><span className="grid h-12 w-12 place-items-center rounded-full bg-[color:var(--g-btn)]"><Plus className="h-5 w-5" /></span>Add shortcut</button>
             </div>
           </div>
+        ) : tab === "Automate" ? (
+          <div className="aw-google flex flex-1 flex-col gap-3 overflow-auto p-4 text-sm">
+            <div className="font-semibold">Tell AYRA a task — she plans it and opens any website it mentions.</div>
+            <textarea value={task} onChange={(e) => setTask(e.target.value)} rows={2} aria-label="Automation task" placeholder="e.g. Open github.com and tell me how to create a new repository"
+              className="rounded-lg border border-[color:var(--g-line)] bg-transparent p-2 outline-none" />
+            <button onClick={automate} disabled={!task.trim() || busy} className="self-start rounded bg-[color:var(--g-blue)] px-5 py-2 text-[color:var(--g-white)] disabled:opacity-50">Run with AYRA</button>
+            {(busy || reply) && <div className="whitespace-pre-wrap rounded-lg bg-[color:var(--g-btn)] p-3">{reply || "AYRA is working..."}</div>}
+          </div>
+        ) : tab === "Screenshot" ? (
+          <div className="aw-google flex flex-1 flex-col gap-3 overflow-auto p-4 text-sm">
+            <div className="flex gap-2">
+              <input value={shotUrl} onChange={(e) => setShotUrl(e.target.value)} onKeyDown={(e) => e.key === "Enter" && capture()} aria-label="Website to capture" placeholder="example.com"
+                className="flex-1 rounded-full border border-[color:var(--g-line)] bg-transparent px-4 py-2 outline-none" />
+              <button onClick={capture} disabled={!shotUrl.trim() || shotBusy} className="rounded bg-[color:var(--g-blue)] px-5 py-2 text-[color:var(--g-white)] disabled:opacity-50">{shotBusy ? "Capturing..." : "Capture"}</button>
+            </div>
+            {shotErr && <div className="text-[color:var(--g-red)]">{shotErr}</div>}
+            {shot ? <img src={shot.url} alt={`Screenshot of ${shot.name}`} className="w-full rounded border border-[color:var(--g-line)]" /> : !shotBusy && <div className="text-center opacity-70">Enter a website and AYRA will take a real screenshot of it.</div>}
+          </div>
         ) : (
-          <div className="aw-google grid flex-1 place-items-center p-6 text-center text-sm">{tab} is not connected yet — AYRA can only open real sites in a new tab for now.</div>
+          <div className="aw-google flex flex-1 flex-col gap-3 overflow-auto p-4 text-sm">
+            <div className="font-semibold">Save AYRA's work to your device</div>
+            <button onClick={() => shot && save(shot.blob, `${shot.name}.png`)} disabled={!shot} className="flex items-center gap-2 self-start rounded bg-[color:var(--g-btn)] px-4 py-2 disabled:opacity-50"><Download className="h-4 w-4" />Latest screenshot {shot ? `(${shot.name})` : "— take one in Screenshot first"}</button>
+            <button onClick={() => reply && save(new Blob([reply], { type: "text/plain;charset=utf-8" }), "ayra-reply.txt")} disabled={!reply} className="flex items-center gap-2 self-start rounded bg-[color:var(--g-btn)] px-4 py-2 disabled:opacity-50"><Download className="h-4 w-4" />AYRA's last answer {reply ? "" : "— give AYRA a command first"}</button>
+          </div>
         )}
       </div>
     </section>
