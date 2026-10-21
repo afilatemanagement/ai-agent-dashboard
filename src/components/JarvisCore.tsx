@@ -34,15 +34,15 @@ import s_gold from "@/assets/scene-gold.jpg";
 import s_bob from "@/assets/scene-bob.jpg";
 import s_crystal from "@/assets/scene-crystal.jpg";
 import s_veil from "@/assets/scene-veil.jpg";
-import v_default from "@/assets/videos/scene-cyan.mp4.asset.json";
-import v_cyanJacket from "@/assets/videos/scene-cyan-jacket.mp4.asset.json";
-import v_amberSide from "@/assets/videos/scene-amber-side.mp4.asset.json";
-import v_amberFront from "@/assets/videos/scene-amber-front.mp4.asset.json";
-import v_amberProfile from "@/assets/videos/scene-amber-profile.mp4.asset.json";
-import v_gold from "@/assets/videos/scene-gold.mp4.asset.json";
-import v_bob from "@/assets/videos/scene-bob.mp4.asset.json";
-import v_crystal from "@/assets/videos/scene-crystal.mp4.asset.json";
-import v_veil from "@/assets/videos/scene-veil.mp4.asset.json";
+import sv_default from "@/assets/videos/scene-cyan.mp4.asset.json";
+import sv_cyanJacket from "@/assets/videos/scene-cyan-jacket.mp4.asset.json";
+import sv_amberSide from "@/assets/videos/scene-amber-side.mp4.asset.json";
+import sv_amberFront from "@/assets/videos/scene-amber-front.mp4.asset.json";
+import sv_amberProfile from "@/assets/videos/scene-amber-profile.mp4.asset.json";
+import sv_gold from "@/assets/videos/scene-gold.mp4.asset.json";
+import sv_bob from "@/assets/videos/scene-bob.mp4.asset.json";
+import sv_crystal from "@/assets/videos/scene-crystal.mp4.asset.json";
+import sv_veil from "@/assets/videos/scene-veil.mp4.asset.json";
 import softwareValaLogo from "@/assets/software-vala-logo.png";
 import ayraNamaste from "@/assets/videos/ayra-namaste.mp4.asset.json";
 import ayraWave from "@/assets/videos/ayra-wave.mp4.asset.json";
@@ -89,15 +89,15 @@ export const AYRA_LOOKS = {
 export type AyraLook = keyof typeof AYRA_LOOKS;
 /** Moving clips of the agents already inside the scene (no white background). */
 export const LOOK_SCENE_VIDEO: Partial<Record<string, string>> = {
-  default: v_default.url,
-  cyanJacket: v_cyanJacket.url,
-  amberSide: v_amberSide.url,
-  amberFront: v_amberFront.url,
-  amberProfile: v_amberProfile.url,
-  gold: v_gold.url,
-  bob: v_bob.url,
-  crystal: v_crystal.url,
-  veil: v_veil.url,
+  default: sv_default.url,
+  cyanJacket: sv_cyanJacket.url,
+  amberSide: sv_amberSide.url,
+  amberFront: sv_amberFront.url,
+  amberProfile: sv_amberProfile.url,
+  gold: sv_gold.url,
+  bob: sv_bob.url,
+  crystal: sv_crystal.url,
+  veil: sv_veil.url,
 };
 /** Same agents placed into AYRA's World night-city scene (white studio background replaced). */
 export const LOOK_SCENE: Record<AyraLook, string> = {
@@ -106,16 +106,16 @@ export const LOOK_SCENE: Record<AyraLook, string> = {
 };
 /** Each look's own motion clip (blinks, breathes, turns) — same outfit as the photo. */
 export const LOOK_VIDEO: Partial<Record<AyraLook, string>> = {
-  default: v_default.url,
-  cyanSide: v_cyanSide.url,
-  cyanJacket: v_cyanJacket.url,
-  amberSide: v_amberSide.url,
-  amberFront: v_amberFront.url,
-  amberProfile: v_amberProfile.url,
-  gold: v_gold.url,
-  bob: v_bob.url,
-  crystal: v_crystal.url,
-  veil: v_veil.url,
+  default: sv_default.url,
+  cyanSide: sv_cyanSide.url,
+  cyanJacket: sv_cyanJacket.url,
+  amberSide: sv_amberSide.url,
+  amberFront: sv_amberFront.url,
+  amberProfile: sv_amberProfile.url,
+  gold: sv_gold.url,
+  bob: sv_bob.url,
+  crystal: sv_crystal.url,
+  veil: sv_veil.url,
 };
 /** Per-look framing so every agent's face, neck and shoulders fit the screen. */
 const LOOK_FIT: Partial<Record<AyraLook, string>> = { default: "cover" };
