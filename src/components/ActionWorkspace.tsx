@@ -15,6 +15,7 @@ import {
   Radio,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { WorkspaceIDE } from "@/components/WorkspaceIDE";
 import type { WorkspaceKind, WorkspaceTask } from "@/lib/workspace-events";
 
 const modes = [
@@ -181,6 +182,7 @@ export function ActionWorkspace({
           <span className="text-xs text-muted-foreground">Local browser only</span>
         </div>
       )}
+      {task && <WorkspaceIDE task={task.title} />}
       {relevant ? (
         <div key={relevant.id} className="workspace-live anim-fade-up">
           <div className="workspace-request">

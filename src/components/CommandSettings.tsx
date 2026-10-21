@@ -26,9 +26,13 @@ export type CenterConfig = {
   brightness: number;
   voice: string;
   liveReactions: boolean;
+  fullAccess: boolean;
+  downloadModule: boolean;
+  systemUpgrade: boolean;
+  hardwareAccess: boolean;
 };
 const KEY = "command_center";
-const DEFAULTS: CenterConfig = { presence: "office", perms: {}, brightness: 100, voice: VOICES[0], liveReactions: false };
+const DEFAULTS: CenterConfig = { presence: "office", perms: {}, brightness: 100, voice: VOICES[0], liveReactions: false, fullAccess: true, downloadModule: false, systemUpgrade: false, hardwareAccess: true };
 
 /** Super Admin gets every permission unless explicitly saved otherwise. */
 export function permFor(cfg: CenterConfig, role: string, perm: string) {
@@ -97,6 +101,31 @@ export function CommandSettings({ onClose }: { onClose: () => void }) {
                   <Switch aria-label="In office" checked={cfg.presence === "office"} onCheckedChange={(v) => update({ presence: v ? "office" : "away" })} />
                 </div>
               </div>
+              {cfg.presence === "away" ? (
+                <div role="status" className="rounded-md border border-danger/60 bg-danger/15 px-3 py-2 text-xs text-danger">User is Away — permissions are restricted / off.</div>
+              ) : (
+                <div role="status" className="rounded-md border border-success/60 bg-success/15 px-3 py-2 text-xs text-success">User is In Office — {cfg.fullAccess ? "Full Permissions Active." : "Full Access Mode is off."}</div>
+              )}
+              <div className={row}>
+                <span className="font-semibold">Full Access Mode (Master)</span>
+                <Switch aria-label="Full access mode" checked={cfg.fullAccess} onCheckedChange={(v) => update({ fullAccess: v })} />
+              </div>
+              <div>
+                <div className={label}>FRANCHISE & AYRA AGENT GRANTS</div>
+                <div className="grid gap-2">
+                  {(["Franchise", "Ayra Agent"] as const).map((r) => (
+                    <div key={r} className="rounded-md border border-border/60 bg-muted/30 p-2">
+                      <div className="mb-1 text-xs font-semibold text-primary">{r}</div>
+                      {ROLE_PERMS.map((p) => (
+                        <div key={p} className="flex items-center justify-between py-1 text-xs">
+                          <span>{p}</span>
+                          <Switch aria-label={`${r}: ${p}`} checked={permFor(cfg, r, p)} onCheckedChange={(v) => update({ perms: { ...cfg.perms, [r]: { ...cfg.perms[r], [p]: v } } })} />
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
               <div>
                 <div className={label}>ROLE MANAGEMENT</div>
                 <Select value={role} onValueChange={setRole}>
@@ -121,8 +150,16 @@ export function CommandSettings({ onClose }: { onClose: () => void }) {
             </TabsContent>
 
             <TabsContent value="system" className="mt-5 grid gap-5">
-              <div className="inline-flex w-fit items-center gap-2 rounded-full border border-success/60 bg-success/15 px-3 py-1 font-display text-[10px] tracking-widest text-success">
-                <ShieldCheck className="h-3.5 w-3.5" /> HARDWARE ACCESS: GRANTED
+              <div className={`inline-flex w-fit items-center gap-2 rounded-full border px-3 py-1 font-display text-[10px] tracking-widest ${cfg.hardwareAccess ? "border-success/60 bg-success/15 text-success" : "border-danger/60 bg-danger/15 text-danger"}`}>
+                <ShieldCheck className="h-3.5 w-3.5" /> AYRA HAS HARDWARE ACCESS: {cfg.hardwareAccess ? "GRANTED" : "DENIED"}
+              </div>
+              <div className="grid gap-2">
+                {([["hardwareAccess", "Hardware Access"], ["downloadModule", "Download Module"], ["systemUpgrade", "System Upgrade"]] as const).map(([k, l]) => (
+                  <div key={k} className={row}>
+                    <span>{l}</span>
+                    <Switch aria-label={l} checked={cfg[k]} onCheckedChange={(v) => update({ [k]: v })} />
+                  </div>
+                ))}
               </div>
               <div>
                 <div className={label}>SYSTEM BRIGHTNESS — {brightness ?? cfg.brightness}%</div>
