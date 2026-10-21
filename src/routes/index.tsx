@@ -1,4 +1,5 @@
 import { accessHeaders } from "@/lib/access-client";
+import { useSpeech } from "@/lib/use-speech";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Menu,
@@ -214,6 +215,21 @@ function Dashboard() {
       timers.current.push(window.setTimeout(() => setCore("idle"), 4000));
     }
   };
+  const speech = useSpeech((text) => { setCmd(""); void run(text); });
+  useEffect(() => { if (speech.interim) setCmd(speech.interim); }, [speech.interim]);
+  useEffect(() => { if (!speech.listening) setCore((c) => (c === "listening" ? "idle" : c)); }, [speech.listening]);
+  useEffect(() => { if (speech.error) setReply(speech.error); }, [speech.error]);
+  const toggleTalk = () => {
+    clear();
+    if (speech.listening) { speech.stop(); return; }
+    if (muted) { setReply("Microphone is muted. Tap Mute again to unmute."); return; }
+    speech.start();
+    setCore("listening");
+  };
+  const toggleMute = (m: boolean) => {
+    setMuted(m);
+    if (m) speech.stop();
+  };
   const openModule = (i: number) => {
     setMenuOpen(false);
     setActive(i);
@@ -242,7 +258,7 @@ function Dashboard() {
         setCmd={setCmd}
         onRun={run}
         listening={core === "listening"}
-        onMic={() => setCore(core === "listening" ? "idle" : "listening")}
+        onMic={toggleTalk}
         onTools={onTools}
         onSettings={() => setSettingsOpen(true)}
         role={role}
@@ -255,14 +271,11 @@ function Dashboard() {
           setLook={setLookOverride}
           reply={reply}
           muted={muted}
-          setMuted={setMuted}
-          onTalk={() => {
-            clear();
-            setCore(core === "listening" ? "idle" : "listening");
-            inputRef.current?.focus();
-          }}
+          setMuted={toggleMute}
+          onTalk={toggleTalk}
           onEnd={() => {
             clear();
+            speech.stop();
             setReply("");
             setCmd("");
             setCore("idle");
@@ -273,7 +286,7 @@ function Dashboard() {
           }}
         />
         <div className="grid min-h-0 grid-rows-[1fr_auto] gap-3">
-          <BrowserPanel />
+          <BrowserPanel onRun={(c) => void run(c)} reply={reply} busy={core === "thinking" || core === "executing" || core === "speaking"} />
           <ActivityPanel core={core} status={statusText} />
         </div>
       </main>

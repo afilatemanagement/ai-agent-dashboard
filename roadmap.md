@@ -6,3 +6,5 @@
 - [x] Agent life: float, slow sway, blink flicker; chat typing min 1.5s; mic listening wave (chat + command bar)
 - [x] Each agent: own motion clip, name tag, fitted framing (checked one by one)
 - [x] Clone AYRA's World design as home screen with all agents in agent rail
+- [x] Connect Automate/Screenshot/Download tabs; Talk/Mute use real microphone
+- [x] Test every agent at desktop + mobile (sizing, motion); blend agent photos into AYRA's World (replace white bg), keep names/proportions

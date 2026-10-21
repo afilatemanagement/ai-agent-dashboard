@@ -23,6 +23,17 @@ import v_gold from "@/assets/videos/look-gold.mp4.asset.json";
 import v_bob from "@/assets/videos/look-bob.mp4.asset.json";
 import v_crystal from "@/assets/videos/look-crystal.mp4.asset.json";
 import v_veil from "@/assets/videos/look-veil.mp4.asset.json";
+import s_default from "@/assets/scene-cyan.jpg";
+import s_cyanSide from "@/assets/scene-cyan-side.jpg";
+import s_cyanJacket from "@/assets/scene-cyan-jacket.jpg";
+import s_amberSide from "@/assets/scene-amber-side.jpg";
+import s_amberFront from "@/assets/scene-amber-front.jpg";
+import s_amberProfile from "@/assets/scene-amber-profile.jpg";
+import s_headset from "@/assets/scene-headset.jpg";
+import s_gold from "@/assets/scene-gold.jpg";
+import s_bob from "@/assets/scene-bob.jpg";
+import s_crystal from "@/assets/scene-crystal.jpg";
+import s_veil from "@/assets/scene-veil.jpg";
 import softwareValaLogo from "@/assets/software-vala-logo.png";
 import ayraNamaste from "@/assets/videos/ayra-namaste.mp4.asset.json";
 import ayraWave from "@/assets/videos/ayra-wave.mp4.asset.json";
@@ -67,6 +78,11 @@ export const AYRA_LOOKS = {
   veil: ayraVeil,
 } as const;
 export type AyraLook = keyof typeof AYRA_LOOKS;
+/** Same agents placed into AYRA's World night-city scene (white studio background replaced). */
+export const LOOK_SCENE: Record<AyraLook, string> = {
+  default: s_default, cyanSide: s_cyanSide, cyanJacket: s_cyanJacket, amberSide: s_amberSide, amberFront: s_amberFront,
+  amberProfile: s_amberProfile, headset: s_headset, gold: s_gold, bob: s_bob, crystal: s_crystal, veil: s_veil,
+};
 /** Each look's own motion clip (blinks, breathes, turns) — same outfit as the photo. */
 export const LOOK_VIDEO: Partial<Record<AyraLook, string>> = {
   default: v_default.url,
