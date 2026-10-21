@@ -8,6 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ServerOps } from "@/components/ServerOps";
+import { AgentBrain } from "@/components/AgentBrain";
 
 export const ROLES = ["Super Admin", "Franchise", "Normal User", "Ayra Agent"] as const;
 export const ROLE_PERMS = [
@@ -78,10 +79,11 @@ export function CommandSettings({ onClose }: { onClose: () => void }) {
           <p className="text-sm text-muted-foreground">Loading…</p>
         ) : (
           <Tabs defaultValue="roles">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="roles" className="text-xs">Roles & Permissions</TabsTrigger>
               <TabsTrigger value="system" className="text-xs">System Control</TabsTrigger>
               <TabsTrigger value="ai" className="text-xs">AI Settings</TabsTrigger>
+              <TabsTrigger value="brain" className="text-xs">Agent Brain</TabsTrigger>
             </TabsList>
 
             <TabsContent value="roles" className="mt-5 grid gap-5">
@@ -161,6 +163,7 @@ export function CommandSettings({ onClose }: { onClose: () => void }) {
                 <Switch aria-label="Human live reactions" checked={cfg.liveReactions} onCheckedChange={(v) => update({ liveReactions: v })} />
               </div>
             </TabsContent>
+            <TabsContent value="brain" className="mt-5"><AgentBrain /></TabsContent>
           </Tabs>
         )}
         {m.error && <p className="mt-3 text-sm text-danger">{m.error.message}</p>}
