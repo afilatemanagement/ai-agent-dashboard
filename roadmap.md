@@ -10,5 +10,5 @@
 - [x] Test every agent at desktop + mobile (sizing, motion); blend agent photos into AYRA's World (replace white bg), keep names/proportions
 - [x] Talk/Mute: real mic permission, blocked + unsupported states, tested
 - [x] Finish remaining reference match, summarize differences
-- [ ] Voice: verify speech -> command flow, fix if broken
+- [x] Voice: verify speech -> command flow, fix if broken
 - [ ] Agent videos blend into scene (no white bg), proportions kept

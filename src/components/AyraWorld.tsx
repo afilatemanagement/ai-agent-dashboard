@@ -103,7 +103,7 @@ export function AgentStage({ core, look, setLook, reply, muted, micNote, micStat
         <div className="text-[15px] leading-snug"><div>AYRA is <span className="text-[color:var(--aw-green)]">online</span></div><div>Ready to help you</div></div>
       </div>
       <div className="aw-bubble">
-        {reply ? <p className="text-base leading-snug">{reply}</p> : <p className="text-xl leading-snug">Hi!<br />I'm <span className="text-[color:var(--aw-cyan)]">AYRA</span><br />How can I help you today?</p>}
+        {reply ? <p className="text-base leading-snug">{reply.replace(/\*\*|__/g, "")}</p> : <p className="text-xl leading-snug">Hi!<br />I'm <span className="text-[color:var(--aw-cyan)]">AYRA</span><br />How can I help you today?</p>}
       </div>
       <div className="aw-plan">
         {["Plan", "Search", "Open", "Login", "Execute", "Report"].map((s, i) => (
