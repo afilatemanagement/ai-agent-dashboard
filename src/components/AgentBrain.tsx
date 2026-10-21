@@ -42,7 +42,7 @@ export function AgentBrain() {
     setScrapeNote("");
     setTimeout(() => { setScraping(false); setScrapeNote("Demo only: no scraper is connected, so nothing was fetched."); }, 2000);
   };
-  const move = (id: number) => setTasks((t) => t.map((x) => (x.id === id ? { ...x, col: COLS[(COLS.indexOf(x.col) + 1) % 4] } : x)));
+  const move = (id: number) => setTasks((t) => t.map((x) => (x.id === id ? { ...x, col: COLS[(COLS.indexOf(x.col) + 1) % 4] ?? "Pending" } : x)));
 
   return (
     <div className="grid gap-5">
