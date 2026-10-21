@@ -555,3 +555,20 @@ html, body { overflow-x: hidden; }
 @media (max-width: 767px) { .ayra-office-logo { left: 50%; top: 77%; width: 78%; z-index: 2; } }
 /* AYRA's full face visible and centred (no zoom-crop) */
 .immersive-dashboard .dashboard-hero .ayra-banner-video, .immersive-dashboard .dashboard-hero .ayra-banner-look { object-fit: contain; object-position: center center; }
+/* One unified office background, sampled from AYRA's photo so both halves blend seamlessly */
+:root { --office-bg: linear-gradient(180deg, oklch(0.92 0.008 270) 0%, oklch(0.96 0.007 300) 55%, oklch(0.97 0.006 300) 100%); }
+.ayra-office-wall, .immersive-dashboard .dashboard-hero { background: var(--office-bg); }
+.immersive-dashboard .dashboard-hero .ayra-banner-portrait,
+.immersive-dashboard .dashboard-hero[data-task-running="true"] .ayra-banner-portrait,
+.immersive-dashboard .dashboard-hero:not([data-task-running="true"]) .ayra-banner-portrait {
+  top: 0; right: 0; bottom: 0; width: 50%; height: 100%; margin: 0; padding: 0; border: 0; box-shadow: none; background: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 18%); mask-image: linear-gradient(90deg, transparent, black 18%);
+}
+.immersive-dashboard .dashboard-hero .ayra-banner-portrait > *,
+.immersive-dashboard .dashboard-hero .ayra-banner-video, .immersive-dashboard .dashboard-hero .ayra-banner-look {
+  width: 100%; height: 100%; object-fit: cover; object-position: center top; margin: 0; border: 0; border-radius: 0; box-shadow: none;
+}
+@media (max-width: 767px) {
+  .immersive-dashboard .dashboard-hero .ayra-banner-portrait, .immersive-dashboard .dashboard-hero:not([data-task-running="true"]) .ayra-banner-portrait { width: 100%; height: 72%; bottom: auto;
+    -webkit-mask-image: linear-gradient(180deg, black 70%, transparent); mask-image: linear-gradient(180deg, black 70%, transparent); }
+}

@@ -254,10 +254,6 @@ function Dashboard() {
             <ActionWorkspace task={workspaceTask} onTask={setWorkspaceTask} />
           </div>
           <div className="hero-identity relative min-w-0 text-center md:text-left">
-            <div className="pt-3 font-display text-3xl font-black tracking-[0.3em] text-primary glow-text">
-              AYRA
-            </div>
-            <div className="font-display text-[10px] tracking-[0.3em] text-accent">AI COMMAND CENTER</div>
             <button
               onClick={() => setLookbook(true)}
               className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 font-display text-[10px] tracking-widest text-primary transition hover:bg-primary/20"
