@@ -7,7 +7,7 @@ import { canUse } from "@/lib/admin.functions";
 /** Shows children only when the server confirms the current role has this permission. */
 export function AccessGate({ perm, children, compact }: { perm: string; children: ReactNode; compact?: boolean }) {
   const check = useServerFn(canUse);
-  const q = useQuery({ queryKey: ["access", "can", perm], queryFn: () => check({ data: { perm } }) });
+  const q = useQuery({ queryKey: ["access", "can", perm], queryFn: () => check({ data: { perm } }), retry: false });
   if (q.isLoading) return compact ? null : <p className="text-xs text-muted-foreground">Checking access…</p>;
   if (q.data?.allowed) return <>{children}</>;
   return (
