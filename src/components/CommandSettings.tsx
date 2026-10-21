@@ -2,7 +2,9 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Download, RefreshCw, ShieldCheck, X } from "lucide-react";
-import { listSettings, saveSetting } from "@/lib/admin.functions";
+import { getCenterConfig, saveCenterConfig } from "@/lib/admin.functions";
+import { CENTER_KEY, parseConfig, permFor, ROLE_PERMS, ROLES, VOICES, type CenterConfig } from "@/lib/access";
+import { AccessPanel, useAccess } from "@/components/AccessPanel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
@@ -11,59 +13,27 @@ import { ServerOps } from "@/components/ServerOps";
 import { AgentBrain } from "@/components/AgentBrain";
 import { AuditLogs } from "@/components/EnterpriseOps";
 
-export const ROLES = ["Super Admin", "Franchise", "Normal User", "Ayra Agent"] as const;
-export const ROLE_PERMS = [
-  "Allow System Coding (VS Code)",
-  "Allow Web Portal Access",
-  "Allow Hardware Control (Brightness/Modules)",
-  "Allow Franchise Data Access",
-] as const;
-export const VOICES = ["Female - Professional", "Female - Friendly", "Male - Jarvis"] as const;
+export { ROLES, ROLE_PERMS, VOICES, permFor, type CenterConfig };
 
-export type CenterConfig = {
-  presence: "office" | "away";
-  perms: Record<string, Record<string, boolean>>;
-  brightness: number;
-  voice: string;
-  liveReactions: boolean;
-  fullAccess: boolean;
-  downloadModule: boolean;
-  systemUpgrade: boolean;
-  hardwareAccess: boolean;
-};
-const KEY = "command_center";
-const DEFAULTS: CenterConfig = { presence: "office", perms: {}, brightness: 100, voice: VOICES[0], liveReactions: false, fullAccess: true, downloadModule: false, systemUpgrade: false, hardwareAccess: true };
-
-/** Super Admin gets every permission unless explicitly saved otherwise. */
-export function permFor(cfg: CenterConfig, role: string, perm: string) {
-  return cfg.perms[role]?.[perm] ?? role === "Super Admin";
-}
-
-/** Command center config, saved for real in the app settings table. */
+/** Command center config, saved for real in the app settings table (anyone can read it). */
 export function useCenterConfig() {
-  const list = useServerFn(listSettings);
-  const q = useQuery({ queryKey: ["settings"], queryFn: () => list() });
-  const raw = q.data?.find((s) => s.key === KEY)?.value;
-  let cfg = DEFAULTS;
-  try {
-    if (raw) cfg = { ...DEFAULTS, ...(JSON.parse(raw) as Partial<CenterConfig>) };
-  } catch {
-    /* keep defaults */
-  }
-  return { cfg, loading: q.isLoading };
+  const get = useServerFn(getCenterConfig);
+  const q = useQuery({ queryKey: ["center", CENTER_KEY], queryFn: () => get() });
+  return { cfg: parseConfig(q.data), loading: q.isLoading };
 }
 
 export function CommandSettings({ onClose }: { onClose: () => void }) {
   const { cfg, loading } = useCenterConfig();
+  const { role: myRole } = useAccess();
   const qc = useQueryClient();
-  const save = useServerFn(saveSetting);
+  const save = useServerFn(saveCenterConfig);
   const [role, setRole] = useState<string>(ROLES[0]);
   const [brightness, setBrightness] = useState<number | null>(null);
   const [note, setNote] = useState("");
   const m = useMutation({
-    mutationFn: (next: CenterConfig) => save({ data: { key: KEY, value: JSON.stringify(next) } }),
+    mutationFn: (next: CenterConfig) => save({ data: { value: JSON.stringify(next) } }),
     onSuccess: () => {
-      void qc.invalidateQueries({ queryKey: ["settings"] });
+      void qc.invalidateQueries({ queryKey: ["center"] });
       void qc.invalidateQueries({ queryKey: ["security"] });
     },
   });
@@ -80,6 +50,10 @@ export function CommandSettings({ onClose }: { onClose: () => void }) {
             <X className="h-4 w-4" />
           </button>
         </div>
+        <AccessPanel />
+        {myRole !== "Super Admin" && !loading && (
+          <p className="mb-4 text-xs text-muted-foreground">Only Super Admin can change these settings. Changes by other roles are refused by the server.</p>
+        )}
         {loading ? (
           <p className="text-sm text-muted-foreground">Loading…</p>
         ) : (

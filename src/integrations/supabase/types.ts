@@ -56,6 +56,27 @@ export type Database = {
         }
         Relationships: []
       }
+      role_pins: {
+        Row: {
+          pin_hash: string
+          role: string
+          salt: string
+          updated_at: string
+        }
+        Insert: {
+          pin_hash: string
+          role: string
+          salt: string
+          updated_at?: string
+        }
+        Update: {
+          pin_hash?: string
+          role?: string
+          salt?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       roles: {
         Row: {
           created_at: string
