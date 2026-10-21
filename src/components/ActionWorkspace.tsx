@@ -1,3 +1,5 @@
+import { AccessGate } from "@/components/AccessGate";
+import { MODULE_PERMS } from "@/lib/access";
 import { useEffect, useRef, useState } from "react";
 import {
   Activity,
@@ -182,7 +184,7 @@ export function ActionWorkspace({
           <span className="text-xs text-muted-foreground">Local browser only</span>
         </div>
       )}
-      {task && <WorkspaceIDE task={task.title} />}
+      {task && <AccessGate compact perm={MODULE_PERMS.workspace}><WorkspaceIDE task={task.title} /></AccessGate>}
       {relevant ? (
         <div key={relevant.id} className="workspace-live anim-fade-up">
           <div className="workspace-request">

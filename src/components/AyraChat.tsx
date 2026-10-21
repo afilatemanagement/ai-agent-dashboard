@@ -1,3 +1,6 @@
+import { AccessGate } from "@/components/AccessGate";
+import { MODULE_PERMS } from "@/lib/access";
+import { accessHeaders } from "@/lib/access-client";
 import { useEffect, useRef, useState } from "react";
 import { Send, X } from "lucide-react";
 
@@ -22,7 +25,7 @@ export function AyraChat({ onClose }: { onClose: () => void }) {
     try {
       const res = await fetch("/api/ayra", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...accessHeaders() },
         body: JSON.stringify({ command: command.slice(-500) }),
       });
       if (!res.ok || !res.body) throw new Error();
@@ -55,6 +58,8 @@ export function AyraChat({ onClose }: { onClose: () => void }) {
           <h2 className="font-display text-lg tracking-widest text-primary glow-text">TALK TO AYRA</h2>
           <button onClick={onClose} aria-label="Close chat" className="rounded-full border border-border p-2 hover:bg-muted"><X className="h-4 w-4" /></button>
         </div>
+        <AccessGate perm={MODULE_PERMS.chat}>
+        <div className="flex min-h-0 flex-1 flex-col">
         <div className="flex-1 space-y-3 overflow-y-auto pr-1">
           {messages.length === 0 && <p className="text-sm text-muted-foreground">Say hello to AYRA — ask anything.</p>}
           {messages.map((m, i) => (
@@ -76,6 +81,8 @@ export function AyraChat({ onClose }: { onClose: () => void }) {
           <input value={draft} onChange={(e) => setDraft(e.target.value)} onKeyDown={(e) => e.key === "Enter" && void send()} aria-label="Message AYRA" placeholder="Message AYRA…" className="min-w-0 flex-1 bg-transparent text-sm outline-none" />
           <button onClick={() => void send()} aria-label="Send message" className="grid h-8 w-8 place-items-center rounded-full bg-primary text-primary-foreground"><Send className="h-4 w-4" /></button>
         </div>
+        </div>
+        </AccessGate>
       </aside>
     </div>
   );

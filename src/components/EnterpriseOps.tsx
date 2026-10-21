@@ -1,3 +1,5 @@
+import { AccessGate } from "@/components/AccessGate";
+import { MODULE_PERMS } from "@/lib/access";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -61,6 +63,7 @@ export function OpsDashboard({ onClose }: { onClose: () => void }) {
           <h2 className="font-display text-lg tracking-widest text-primary glow-text">AYRA OPERATIONS</h2>
           <button onClick={onClose} aria-label="Close dashboard" className="rounded-full border border-border p-2 hover:bg-muted"><X className="h-4 w-4" /></button>
         </div>
+        <AccessGate perm={MODULE_PERMS.ops}>
         <div className="grid gap-5">
           <div>
             <div className={label}>API USAGE & COST <DemoTag /></div>
@@ -115,6 +118,7 @@ export function OpsDashboard({ onClose }: { onClose: () => void }) {
             </div>
           </div>
         </div>
+        </AccessGate>
       </aside>
     </div>
   );

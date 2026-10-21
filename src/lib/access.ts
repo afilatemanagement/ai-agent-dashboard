@@ -6,12 +6,21 @@ export const MODULE_PERMS = {
   settings: "Access Settings Module",
   roles: "Manage Roles Module",
   security: "View Security & Audit Logs",
+  chat: "Use AYRA Chat & Commands",
+  serverTools: "Use Server Tools",
+  ops: "View Operations Dashboard",
+  workspace: "Use Workspace View",
 } as const;
+export const GATED = Object.values(MODULE_PERMS);
 
 export const ROLE_PERMS = [
   MODULE_PERMS.settings,
   MODULE_PERMS.roles,
   MODULE_PERMS.security,
+  MODULE_PERMS.chat,
+  MODULE_PERMS.serverTools,
+  MODULE_PERMS.ops,
+  MODULE_PERMS.workspace,
   "Allow System Coding (VS Code)",
   "Allow Web Portal Access",
   "Allow Hardware Control (Brightness/Modules)",

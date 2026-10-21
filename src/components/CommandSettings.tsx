@@ -1,3 +1,5 @@
+import { AccessGate } from "@/components/AccessGate";
+import { MODULE_PERMS } from "@/lib/access";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -159,7 +161,7 @@ export function CommandSettings({ onClose }: { onClose: () => void }) {
                 </button>
               </div>
               {note && <p className="text-xs text-muted-foreground">{note}</p>}
-              <ServerOps />
+              <AccessGate perm={MODULE_PERMS.serverTools}><ServerOps /></AccessGate>
             </TabsContent>
 
             <TabsContent value="ai" className="mt-5 grid gap-5">

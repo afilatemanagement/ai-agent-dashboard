@@ -1,10 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { streamAyraReply } from "@/lib/ayra.server";
+import { MODULE_PERMS } from "@/lib/access";
+import { ACCESS_HEADER, requirePerm } from "@/lib/access.server";
 
 export const Route = createFileRoute("/api/ayra")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        try {
+          await requirePerm(MODULE_PERMS.chat, request.headers.get(ACCESS_HEADER));
+        } catch (e) {
+          return Response.json({ error: e instanceof Error ? e.message : "Access denied" }, { status: 403 });
+        }
         let command = "";
         try {
           const body = (await request.json()) as { command?: unknown };
