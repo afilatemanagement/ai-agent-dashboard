@@ -33,12 +33,12 @@ export function useBannerThemeCycle() {
     return () => clearInterval(id);
   }, []);
   useEffect(() => {
-    const p = BANNER_PALETTES[index];
+    const p = BANNER_PALETTES[index] ?? BANNER_PALETTES[0];
     applyTheme(p);
     const c = ("c" in p ? p.c : undefined) ?? 0.17;
     const s = document.documentElement.style;
     s.setProperty("--banner-bg-a", `oklch(0.16 ${c * 0.35} ${p.primary})`);
     s.setProperty("--banner-bg-b", `oklch(0.1 ${c * 0.25} ${p.accent})`);
   }, [index]);
-  return BANNER_PALETTES[index];
+  return BANNER_PALETTES[index] ?? BANNER_PALETTES[0];
 }
