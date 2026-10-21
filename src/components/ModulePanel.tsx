@@ -12,6 +12,7 @@ import {
   saveSetting,
   securityStatus,
 } from "@/lib/admin.functions";
+import { CONTROL_KEYS, STANDARD_ROLES, effectivePermissions, hardwareGranted, readControl } from "@/lib/control-state";
 
 const transitions = ["anim-holo", "anim-warp", "anim-slide", "anim-iris"];
 export type ModuleId = "settings" | "roles" | "security";
@@ -258,6 +259,9 @@ function RolesModule() {
               <div className="mb-2 flex items-center gap-2">
                 <span className="font-display text-sm text-primary">{r.name}</span>
                 <span className="flex-1 text-xs text-muted-foreground">{r.description}</span>
+                <span className="text-[10px] text-accent">
+                  {effectivePermissions(r.permissions, PERMISSIONS, ctl.isUserPresent, ctl.fullAccess).length}/{PERMISSIONS.length} active
+                </span>
                 <button aria-label={`Delete ${r.name}`} onClick={() => del({ data: { id: r.id } }).then(refresh)}>
                   <Trash2 className="h-4 w-4 text-danger" />
                 </button>
@@ -314,5 +318,19 @@ function SecurityModule() {
         </div>
       </div>
     </State>
+  );
+}
+
+function Toggle({ label, on, onChange }: { label: string; on: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <button
+      role="switch"
+      aria-checked={on}
+      onClick={() => onChange(!on)}
+      className={`flex items-center gap-2 rounded-full border px-3 py-1 text-xs transition ${on ? "border-primary bg-primary/20 text-primary" : "border-border text-muted-foreground"}`}
+    >
+      <span className={`h-3 w-6 rounded-full transition ${on ? "bg-primary" : "bg-muted"}`} />
+      {label}
+    </button>
   );
 }
