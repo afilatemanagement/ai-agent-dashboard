@@ -34,6 +34,15 @@ import s_gold from "@/assets/scene-gold.jpg";
 import s_bob from "@/assets/scene-bob.jpg";
 import s_crystal from "@/assets/scene-crystal.jpg";
 import s_veil from "@/assets/scene-veil.jpg";
+import v_default from "@/assets/videos/scene-cyan.mp4.asset.json";
+import v_cyanJacket from "@/assets/videos/scene-cyan-jacket.mp4.asset.json";
+import v_amberSide from "@/assets/videos/scene-amber-side.mp4.asset.json";
+import v_amberFront from "@/assets/videos/scene-amber-front.mp4.asset.json";
+import v_amberProfile from "@/assets/videos/scene-amber-profile.mp4.asset.json";
+import v_gold from "@/assets/videos/scene-gold.mp4.asset.json";
+import v_bob from "@/assets/videos/scene-bob.mp4.asset.json";
+import v_crystal from "@/assets/videos/scene-crystal.mp4.asset.json";
+import v_veil from "@/assets/videos/scene-veil.mp4.asset.json";
 import softwareValaLogo from "@/assets/software-vala-logo.png";
 import ayraNamaste from "@/assets/videos/ayra-namaste.mp4.asset.json";
 import ayraWave from "@/assets/videos/ayra-wave.mp4.asset.json";
@@ -78,6 +87,18 @@ export const AYRA_LOOKS = {
   veil: ayraVeil,
 } as const;
 export type AyraLook = keyof typeof AYRA_LOOKS;
+/** Moving clips of the agents already inside the scene (no white background). */
+export const LOOK_SCENE_VIDEO: Partial<Record<string, string>> = {
+  default: v_default.url,
+  cyanJacket: v_cyanJacket.url,
+  amberSide: v_amberSide.url,
+  amberFront: v_amberFront.url,
+  amberProfile: v_amberProfile.url,
+  gold: v_gold.url,
+  bob: v_bob.url,
+  crystal: v_crystal.url,
+  veil: v_veil.url,
+};
 /** Same agents placed into AYRA's World night-city scene (white studio background replaced). */
 export const LOOK_SCENE: Record<AyraLook, string> = {
   default: s_default, cyanSide: s_cyanSide, cyanJacket: s_cyanJacket, amberSide: s_amberSide, amberFront: s_amberFront,
