@@ -702,3 +702,5 @@ html, body { overflow-x: hidden; }
 .aw-step-on { border-color: var(--aw-cyan); background: var(--aw-blue); box-shadow: 0 0 12px var(--aw-cyan); }
 .aw-foot { padding: .6rem; text-align: center; font-size: 15px; }
 @media (max-width: 1100px) { .aw-main { grid-template-columns: 1fr; } .aw-top { flex-wrap: wrap; height: auto; padding: .5rem; } }
+.aw-chip { font-size: 14px; padding: 0 .9rem; gap: .55rem; white-space: nowrap; }
+.aw-agents { top: 455px; bottom: 230px; }

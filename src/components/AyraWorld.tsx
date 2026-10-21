@@ -56,7 +56,7 @@ export function TopBar({ cmd, setCmd, onRun, listening, onMic, onTools, onSettin
         </button>
         {tools && (
           <div className="aw-menu" onMouseLeave={() => setTools(false)}>
-            {[["settings", "Settings"], ["roles", "Roles & Permissions"], ["security", "Security"], ["chat", "Chat with AYRA"], ["ops", "Operations Dashboard"], ["lookbook", "All Agents"]].map(([k, l]) => (
+            {([["settings", "Settings"], ["roles", "Roles & Permissions"], ["security", "Security"], ["chat", "Chat with AYRA"], ["ops", "Operations Dashboard"], ["lookbook", "All Agents"]] as const).map(([k, l]) => (
               <button key={k} onClick={() => { setTools(false); onTools(k); }}>{l}</button>
             ))}
           </div>
@@ -115,16 +115,16 @@ export function AgentStage({ core, look, setLook, reply, muted, setMuted, onTalk
         ))}
       </div>
       {look && <div className="aw-name">{LOOK_NAMES[look]}</div>}
-      <div className="absolute bottom-[164px] left-1/2 flex -translate-x-[48%] gap-6">
+      <div className="absolute bottom-[172px] left-1/2 flex -translate-x-[48%] gap-6">
         <div className="flex flex-col items-center gap-2"><button aria-label="Talk" onClick={onTalk} className={`aw-round aw-talk ${listening ? "on" : ""}`}><Mic className="h-8 w-8" /></button><span>Talk</span></div>
         <div className="flex flex-col items-center gap-2"><button aria-label="Mute" aria-pressed={muted} onClick={() => setMuted(!muted)} className={`aw-round aw-mute ${muted ? "on" : ""}`}><MicOff className="h-7 w-7" /></button><span>Mute</span></div>
         <div className="flex flex-col items-center gap-2"><button aria-label="End" onClick={onEnd} className="aw-round aw-end"><Phone className="h-8 w-8 rotate-[135deg]" /></button><span>End</span></div>
       </div>
-      <div className="absolute bottom-[118px] left-[230px] flex items-center gap-3 text-sm text-[color:var(--aw-soft)]">
+      <div className="absolute bottom-[110px] left-[230px] flex items-center gap-3 text-sm text-[color:var(--aw-soft)]">
         {listening ? "Listening..." : core === "idle" ? "Standing by" : "Working..."}
         <div className={`aw-wave ${listening || core === "speaking" ? "live" : ""}`}>{Array.from({ length: 30 }, (_, i) => <span key={i} style={{ animationDelay: `${(i % 10) * 0.08}s`, height: `${20 + ((i * 37) % 80)}%` }} />)}</div>
       </div>
-      <div className="absolute bottom-4 left-11 right-4 flex flex-wrap gap-x-4 gap-y-3">
+      <div className="absolute bottom-4 left-11 right-3 flex flex-wrap gap-x-2.5 gap-y-2.5">
         <button className="aw-chip" onClick={() => onShortcut("Check my Facebook", "https://www.facebook.com")}><Globe className="h-5 w-5" />Check my Facebook</button>
         <button className="aw-chip" onClick={() => onShortcut("Open GitHub and show my repositories", "https://github.com")}><Github className="h-5 w-5" />Open GitHub and show my repositories</button>
         <button className="aw-chip" onClick={() => onShortcut("Create a new project")}><Plus className="h-5 w-5" />Create a new project</button>
