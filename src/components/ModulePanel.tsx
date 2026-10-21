@@ -97,8 +97,63 @@ function SettingsModule() {
     },
   });
   const remove = useMutation({ mutationFn: (k: string) => del({ data: { key: k } }), onSuccess: refresh });
+  const ctl = readControl(q.data);
+  const set = (k: string, v: string) => save({ data: { key: k, value: v } }).then(refresh);
   return (
     <div className="grid gap-4">
+      <section className="grid gap-3 rounded-md border border-border/60 p-3">
+        <h3 className="font-display text-xs tracking-widest text-accent">ACCESS & PRESENCE</h3>
+        <div className="flex flex-wrap gap-2">
+          {(["in_office", "away"] as const).map((p) => (
+            <button
+              key={p}
+              onClick={() => set(CONTROL_KEYS.presence, p)}
+              className={`rounded-full border px-3 py-1 text-xs ${(p === "in_office") === ctl.isUserPresent && q.data ? "border-primary bg-primary/20 text-primary" : "border-border"}`}
+            >
+              {p === "in_office" ? "In Office" : "Away"}
+            </button>
+          ))}
+          <Toggle label="Full Access Mode" on={ctl.fullAccess} onChange={(v) => set(CONTROL_KEYS.fullAccess, v ? "on" : "off")} />
+        </div>
+        <p className={`rounded-md px-3 py-2 text-xs ${ctl.isUserPresent ? "bg-success/15 text-success" : "bg-danger/15 text-danger"}`}>
+          {ctl.isUserPresent
+            ? ctl.fullAccess
+              ? "You are in office — Full Permissions are ACTIVE."
+              : "You are in office — each role's own permissions are active."
+            : "You are away — all permissions are RESTRICTED / OFF."}
+        </p>
+      </section>
+      <section className="grid gap-3 rounded-md border border-border/60 p-3">
+        <h3 className="font-display text-xs tracking-widest text-accent">SYSTEM CONTROL</h3>
+        <label className="grid gap-1 text-xs">
+          Screen Brightness: {ctl.systemControlState.brightness}%
+          <input
+            type="range"
+            min={20}
+            max={100}
+            defaultValue={ctl.systemControlState.brightness}
+            key={ctl.systemControlState.brightness}
+            onPointerUp={(e) => set(CONTROL_KEYS.brightness, (e.target as HTMLInputElement).value)}
+            onKeyUp={(e) => set(CONTROL_KEYS.brightness, (e.target as HTMLInputElement).value)}
+            className="accent-[var(--primary)]"
+          />
+          <span className="text-muted-foreground">Dims this dashboard. A website cannot change your monitor's brightness.</span>
+        </label>
+        <div className="flex flex-wrap gap-2">
+          <Toggle label="Download Module" on={ctl.systemControlState.downloadModule} onChange={(v) => set(CONTROL_KEYS.download, v ? "on" : "off")} />
+          <Toggle label="System Upgrade" on={ctl.systemControlState.systemUpgrade} onChange={(v) => set(CONTROL_KEYS.upgrade, v ? "on" : "off")} />
+          <Toggle label="Hardware Access" on={ctl.systemControlState.hardwareAccess} onChange={(v) => set(CONTROL_KEYS.hardware, v ? "on" : "off")} />
+        </div>
+        {(() => {
+          const ok = hardwareGranted(ctl.isUserPresent, ctl.systemControlState.hardwareAccess);
+          return (
+            <div className={`font-display text-xs tracking-widest ${ok ? "text-success" : "text-danger"}`}>
+              AYRA HAS HARDWARE ACCESS: {ok ? "GRANTED" : "DENIED"}
+            </div>
+          );
+        })()}
+        <p className="text-xs text-muted-foreground">These switches are saved permissions. No device is actually controlled from the browser.</p>
+      </section>
       <form
         className="grid gap-2 sm:grid-cols-[1fr_2fr_auto]"
         onSubmit={(e) => {
@@ -159,8 +214,31 @@ function RolesModule() {
     else set.add(p);
     void save({ data: { id: r.id, name: r.name, description: r.description, permissions: [...set] } }).then(refresh);
   };
+  const settingsFn = useServerFn(listSettings);
+  const sq = useQuery({ queryKey: ["settings"], queryFn: () => settingsFn() });
+  const ctl = readControl(sq.data);
+  const missingStd = STANDARD_ROLES.filter((n) => !q.data?.some((r) => r.name.toLowerCase() === n.toLowerCase()));
   return (
     <div className="grid gap-4">
+      <p className={`rounded-md px-3 py-2 text-xs ${ctl.isUserPresent ? "bg-success/15 text-success" : "bg-danger/15 text-danger"}`}>
+        {ctl.isUserPresent
+          ? `In Office — ${ctl.fullAccess ? "Full Access Mode: every permission active" : "role permissions active"}`
+          : "Away — permissions are restricted. Ticked boxes stay saved but are OFF until you are in office."}
+      </p>
+      {q.data && missingStd.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2 text-xs">
+          <span className="text-muted-foreground">Add role:</span>
+          {missingStd.map((n) => (
+            <button
+              key={n}
+              className="rounded-full border border-border px-3 py-1 hover:bg-primary/20"
+              onClick={() => save({ data: { name: n, description: n === "Ayra-Agent" ? "AYRA's own permissions" : `${n} role`, permissions: [] } }).then(refresh)}
+            >
+              + {n}
+            </button>
+          ))}
+        </div>
+      )}
       <form
         className="grid gap-2 sm:grid-cols-[1fr_2fr_auto]"
         onSubmit={(e) => {
