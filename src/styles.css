@@ -611,3 +611,24 @@ html, body { overflow-x: hidden; }
 @keyframes ticker { from { transform: translateX(100vw); } to { transform: translateX(-100%); } }
 @media (prefers-reduced-motion: reduce) { .ayra-energy *, .ayra-ticker > div { animation: none; } }
 @media (max-width: 767px) { .immersive-dashboard .dashboard-hero .ayra-banner-portrait { width: 100%; right: 0; } }
+/* v2: uncropped soft-edged avatar, alive motion, neck-only glow */
+.immersive-dashboard .dashboard-hero .ayra-banner-portrait,
+.immersive-dashboard .dashboard-hero[data-task-running="true"] .ayra-banner-portrait,
+.immersive-dashboard .dashboard-hero:not([data-task-running="true"]) .ayra-banner-portrait {
+  -webkit-mask-image: radial-gradient(ellipse 72% 85% at 50% 45%, black 62%, transparent 100%); mask-image: radial-gradient(ellipse 72% 85% at 50% 45%, black 62%, transparent 100%);
+  animation: ayra-float 6s ease-in-out infinite, ayra-sway 14s ease-in-out infinite; transform-origin: 50% 90%; }
+.immersive-dashboard .dashboard-hero .ayra-banner-portrait > img, .immersive-dashboard .dashboard-hero .ayra-banner-portrait > video,
+.immersive-dashboard .dashboard-hero .ayra-banner-look, .immersive-dashboard .dashboard-hero .ayra-banner-video {
+  object-fit: cover; object-position: center top; animation: ayra-breathe 4s ease-in-out infinite, ayra-blink 5s linear infinite; transform-origin: center top; }
+@keyframes ayra-float { 0%,100% { translate: 0 0; } 50% { translate: 0 -2px; } }
+@keyframes ayra-sway { 0%,100% { rotate: 0deg; } 25% { rotate: .4deg; } 75% { rotate: -.4deg; } }
+@keyframes ayra-blink { 0%,95%,100% { filter: brightness(1); } 96.5% { filter: brightness(.9); } }
+.immersive-dashboard .dashboard-hero .ayra-banner-portrait > .ayra-energy { inset: auto 0 0 0; width: 100%; height: 20%; animation: energy-breathe 3s ease-in-out infinite; }
+.ayra-energy::before { content: ""; position: absolute; left: 34%; right: 34%; bottom: 10%; height: 50%; border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in oklab, var(--primary) 55%, transparent), transparent); filter: blur(10px); }
+@keyframes energy-breathe { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
+.dashboard-hero > .ayra-ticker { position: absolute; z-index: 25; }
+.listen-wave { display: flex; align-items: center; gap: 3px; height: 22px; }
+.listen-wave span { width: 3px; height: 100%; border-radius: 3px; background: var(--primary); box-shadow: 0 0 6px var(--primary); animation: listen-bar .9s ease-in-out infinite; }
+@keyframes listen-bar { 0%,100% { transform: scaleY(.25); } 50% { transform: scaleY(1); } }
+@media (prefers-reduced-motion: reduce) { .immersive-dashboard .dashboard-hero .ayra-banner-portrait, .immersive-dashboard .dashboard-hero .ayra-banner-portrait > *, .listen-wave span { animation: none; } }

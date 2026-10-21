@@ -2,7 +2,7 @@ import { AccessGate } from "@/components/AccessGate";
 import { MODULE_PERMS } from "@/lib/access";
 import { accessHeaders } from "@/lib/access-client";
 import { useEffect, useRef, useState } from "react";
-import { Send, X } from "lucide-react";
+import { Mic, Send, X } from "lucide-react";
 
 type Msg = { role: "user" | "ayra"; text: string };
 
