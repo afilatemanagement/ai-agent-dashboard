@@ -23,8 +23,10 @@ import {
   Sparkles,
   Cog,
   Activity,
+  MessageSquare,
 } from "lucide-react";
 import { CommandSettings, useCenterConfig } from "@/components/CommandSettings";
+import { AyraChat } from "@/components/AyraChat";
 import { NotificationBell, OpsDashboard } from "@/components/EnterpriseOps";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -100,6 +102,7 @@ function Dashboard() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [opsOpen, setOpsOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
   const { cfg } = useCenterConfig();
   useEffect(() => {
     const v = () => setHidden(document.hidden);
@@ -269,6 +272,9 @@ function Dashboard() {
             <Button variant="ghost" size="icon" onClick={() => setOpsOpen(true)} aria-label="Open Ayra Operations Dashboard" className="rounded-full">
               <Activity className="h-5 w-5 text-primary" />
             </Button>
+            <Button variant="ghost" size="icon" onClick={() => setChatOpen(true)} aria-label="Chat with AYRA" className="rounded-full">
+              <MessageSquare className="h-5 w-5 text-primary" />
+            </Button>
             <NotificationBell />
             <Button
               variant="ghost"
@@ -383,6 +389,7 @@ function Dashboard() {
         />
       )}
       {settingsOpen && <CommandSettings onClose={() => setSettingsOpen(false)} />}
+      {chatOpen && <AyraChat onClose={() => setChatOpen(false)} />}
       {opsOpen && <OpsDashboard onClose={() => setOpsOpen(false)} />}
       {lookbook && (
         <LookbookPanel
