@@ -706,3 +706,4 @@ html, body { overflow-x: hidden; }
 .aw-agents { top: 455px; bottom: 230px; }
 .aw-look { inset: 40px 0 120px; }
 .aw-look > * { object-fit: cover !important; object-position: center 15% !important; -webkit-mask-image: radial-gradient(ellipse 36% 52% at 50% 45%, black 55%, transparent 100%); mask-image: radial-gradient(ellipse 36% 52% at 50% 45%, black 55%, transparent 100%); }
+.aw-look > * { object-fit: contain !important; object-position: center bottom !important; -webkit-mask-image: radial-gradient(ellipse 30% 60% at 50% 50%, black 70%, transparent 100%); mask-image: radial-gradient(ellipse 30% 60% at 50% 50%, black 70%, transparent 100%); }
