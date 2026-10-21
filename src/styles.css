@@ -585,3 +585,5 @@ html, body { overflow-x: hidden; }
 .settings-slide { animation: settings-in .45s cubic-bezier(.2,.8,.2,1) both; }
 @keyframes settings-in { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 .restricted-banner { background: var(--danger); color: var(--primary-foreground); }
+
+.terminal-screen { background: oklch(0.12 0.01 150); color: oklch(0.85 0.2 145); }

@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ServerOps } from "@/components/ServerOps";
 
 export const ROLES = ["Super Admin", "Franchise", "Normal User", "Ayra Agent"] as const;
 export const ROLE_PERMS = [
@@ -142,6 +143,7 @@ export function CommandSettings({ onClose }: { onClose: () => void }) {
                 </button>
               </div>
               {note && <p className="text-xs text-muted-foreground">{note}</p>}
+              <ServerOps />
             </TabsContent>
 
             <TabsContent value="ai" className="mt-5 grid gap-5">
