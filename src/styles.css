@@ -712,5 +712,5 @@ html, body { overflow-x: hidden; }
 @media (max-width: 640px) {
   .aw-chips { left: 12px !important; right: 12px !important; flex-wrap: nowrap !important; overflow-x: auto; scrollbar-width: none; }
   .aw-stage .aw-chip { flex: none; }
-  .aw-motion { top: auto !important; bottom: 250px; right: 10px; }
+  .aw-motion { top: auto !important; bottom: 330px; right: 10px; }
 }
