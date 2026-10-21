@@ -13,6 +13,16 @@ import ayraCrystal from "@/assets/ayra-crystal.jpg";
 import ayraVeil from "@/assets/ayra-veil.jpg";
 import ayraCinematic from "@/assets/ayra-cinematic.jpg";
 import ayraWalk from "@/assets/videos/ayra-idle-loop.mp4.asset.json";
+import v_default from "@/assets/videos/look-cyan.mp4.asset.json";
+import v_cyanSide from "@/assets/videos/look-cyan-side.mp4.asset.json";
+import v_cyanJacket from "@/assets/videos/look-cyan-jacket.mp4.asset.json";
+import v_amberSide from "@/assets/videos/look-amber-side.mp4.asset.json";
+import v_amberFront from "@/assets/videos/look-amber-front.mp4.asset.json";
+import v_amberProfile from "@/assets/videos/look-amber-profile.mp4.asset.json";
+import v_gold from "@/assets/videos/look-gold.mp4.asset.json";
+import v_bob from "@/assets/videos/look-bob.mp4.asset.json";
+import v_crystal from "@/assets/videos/look-crystal.mp4.asset.json";
+import v_veil from "@/assets/videos/look-veil.mp4.asset.json";
 import softwareValaLogo from "@/assets/software-vala-logo.png";
 import ayraNamaste from "@/assets/videos/ayra-namaste.mp4.asset.json";
 import ayraWave from "@/assets/videos/ayra-wave.mp4.asset.json";
@@ -57,6 +67,21 @@ export const AYRA_LOOKS = {
   veil: ayraVeil,
 } as const;
 export type AyraLook = keyof typeof AYRA_LOOKS;
+/** Each look's own motion clip (blinks, breathes, turns) — same outfit as the photo. */
+const LOOK_VIDEO: Partial<Record<AyraLook, string>> = {
+  default: v_default.url,
+  cyanSide: v_cyanSide.url,
+  cyanJacket: v_cyanJacket.url,
+  amberSide: v_amberSide.url,
+  amberFront: v_amberFront.url,
+  amberProfile: v_amberProfile.url,
+  gold: v_gold.url,
+  bob: v_bob.url,
+  crystal: v_crystal.url,
+  veil: v_veil.url,
+};
+/** Per-look framing so every agent's face, neck and shoulders fit the screen. */
+const LOOK_FIT: Partial<Record<AyraLook, string>> = { default: "contain" };
 const CLIP_LOOK: AyraLook = "cyanJacket";
 
 /** Which look AYRA wears per core state (when no occasion overrides it). */
@@ -233,6 +258,11 @@ export function JarvisCore({
             ))}
           </div>
         )}
+        {LOOK_VIDEO[look] && !clipVisible && !reduced && (
+          <video key={`lv-${look}`} src={LOOK_VIDEO[look]} poster={AYRA_LOOKS[look]} autoPlay muted loop playsInline preload="auto" aria-hidden="true"
+            data-fit={LOOK_FIT[look] ?? "cover"} className="ayra-look-video absolute inset-0 h-full w-full" />
+        )}
+        <div className="ayra-name-tag">{LOOK_NAMES[look]}</div>
         {/* AYRA bust: full face, head, neck and shoulders — portrait frame, no circular crop */}
         <div className="absolute inset-0">
           <div className="absolute inset-0">
