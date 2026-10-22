@@ -34,6 +34,7 @@ import s_gold from "@/assets/scene-gold.jpg";
 import s_bob from "@/assets/scene-bob.jpg";
 import s_crystal from "@/assets/scene-crystal.jpg";
 import s_veil from "@/assets/scene-veil.jpg";
+import sv_cyanSide from "@/assets/videos/scene-cyan-side.mp4.asset.json";
 import sv_default from "@/assets/videos/scene-cyan.mp4.asset.json";
 import sv_cyanJacket from "@/assets/videos/scene-cyan-jacket.mp4.asset.json";
 import sv_amberSide from "@/assets/videos/scene-amber-side.mp4.asset.json";
@@ -90,6 +91,7 @@ export type AyraLook = keyof typeof AYRA_LOOKS;
 /** Moving clips of the agents already inside the scene (no white background). */
 export const LOOK_SCENE_VIDEO: Partial<Record<string, string>> = {
   default: sv_default.url,
+  cyanSide: sv_cyanSide.url,
   cyanJacket: sv_cyanJacket.url,
   amberSide: sv_amberSide.url,
   amberFront: sv_amberFront.url,
