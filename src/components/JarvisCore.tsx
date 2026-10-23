@@ -12,17 +12,17 @@ import ayraBob from "@/assets/ayra-bob.jpg";
 import ayraCrystal from "@/assets/ayra-crystal.jpg";
 import ayraVeil from "@/assets/ayra-veil.jpg";
 import ayraCinematic from "@/assets/ayra-cinematic.jpg";
-import ayraWalk from "@/assets/videos/ayra-idle-loop.mp4.asset.json";
-import v_default from "@/assets/videos/look-cyan.mp4.asset.json";
-import v_cyanSide from "@/assets/videos/look-cyan-side.mp4.asset.json";
-import v_cyanJacket from "@/assets/videos/look-cyan-jacket.mp4.asset.json";
-import v_amberSide from "@/assets/videos/look-amber-side.mp4.asset.json";
-import v_amberFront from "@/assets/videos/look-amber-front.mp4.asset.json";
-import v_amberProfile from "@/assets/videos/look-amber-profile.mp4.asset.json";
-import v_gold from "@/assets/videos/look-gold.mp4.asset.json";
-import v_bob from "@/assets/videos/look-bob.mp4.asset.json";
-import v_crystal from "@/assets/videos/look-crystal.mp4.asset.json";
-import v_veil from "@/assets/videos/look-veil.mp4.asset.json";
+import ayraWalk from "@/assets/videos/ayra-idle-loop.mp4";
+import v_default from "@/assets/videos/look-cyan.mp4";
+import v_cyanSide from "@/assets/videos/look-cyan-side.mp4";
+import v_cyanJacket from "@/assets/videos/look-cyan-jacket.mp4";
+import v_amberSide from "@/assets/videos/look-amber-side.mp4";
+import v_amberFront from "@/assets/videos/look-amber-front.mp4";
+import v_amberProfile from "@/assets/videos/look-amber-profile.mp4";
+import v_gold from "@/assets/videos/look-gold.mp4";
+import v_bob from "@/assets/videos/look-bob.mp4";
+import v_crystal from "@/assets/videos/look-crystal.mp4";
+import v_veil from "@/assets/videos/look-veil.mp4";
 import s_default from "@/assets/scene-cyan.jpg";
 import s_cyanSide from "@/assets/scene-cyan-side.jpg";
 import s_cyanJacket from "@/assets/scene-cyan-jacket.jpg";
@@ -34,23 +34,23 @@ import s_gold from "@/assets/scene-gold.jpg";
 import s_bob from "@/assets/scene-bob.jpg";
 import s_crystal from "@/assets/scene-crystal.jpg";
 import s_veil from "@/assets/scene-veil.jpg";
-import sv_cyanSide from "@/assets/videos/scene-cyan-side.mp4.asset.json";
-import sv_default from "@/assets/videos/scene-cyan.mp4.asset.json";
-import sv_cyanJacket from "@/assets/videos/scene-cyan-jacket.mp4.asset.json";
-import sv_amberSide from "@/assets/videos/scene-amber-side.mp4.asset.json";
-import sv_amberFront from "@/assets/videos/scene-amber-front.mp4.asset.json";
-import sv_amberProfile from "@/assets/videos/scene-amber-profile.mp4.asset.json";
-import sv_gold from "@/assets/videos/scene-gold.mp4.asset.json";
-import sv_bob from "@/assets/videos/scene-bob.mp4.asset.json";
-import sv_crystal from "@/assets/videos/scene-crystal.mp4.asset.json";
-import sv_veil from "@/assets/videos/scene-veil.mp4.asset.json";
+import sv_cyanSide from "@/assets/videos/scene-cyan-side.mp4";
+import sv_default from "@/assets/videos/scene-cyan.mp4";
+import sv_cyanJacket from "@/assets/videos/scene-cyan-jacket.mp4";
+import sv_amberSide from "@/assets/videos/scene-amber-side.mp4";
+import sv_amberFront from "@/assets/videos/scene-amber-front.mp4";
+import sv_amberProfile from "@/assets/videos/scene-amber-profile.mp4";
+import sv_gold from "@/assets/videos/scene-gold.mp4";
+import sv_bob from "@/assets/videos/scene-bob.mp4";
+import sv_crystal from "@/assets/videos/scene-crystal.mp4";
+import sv_veil from "@/assets/videos/scene-veil.mp4";
 import softwareValaLogo from "@/assets/software-vala-logo.png";
-import ayraNamaste from "@/assets/videos/ayra-namaste.mp4.asset.json";
-import ayraWave from "@/assets/videos/ayra-wave.mp4.asset.json";
-import ayraCelebrate from "@/assets/videos/ayra-celebrate.mp4.asset.json";
+import ayraNamaste from "@/assets/videos/ayra-namaste.mp4";
+import ayraWave from "@/assets/videos/ayra-wave.mp4";
+import ayraCelebrate from "@/assets/videos/ayra-celebrate.mp4";
 
 /** One-shot gesture clips from the same photo/outfit; each plays once then returns to the loop. */
-const GESTURE_CLIPS = { namaste: ayraNamaste.url, wave: ayraWave.url, celebrate: ayraCelebrate.url };
+const GESTURE_CLIPS = { namaste: ayraNamaste, wave: ayraWave, celebrate: ayraCelebrate };
 type Gesture = keyof typeof GESTURE_CLIPS;
 
 export type CoreState =
@@ -90,16 +90,16 @@ export const AYRA_LOOKS = {
 export type AyraLook = keyof typeof AYRA_LOOKS;
 /** Moving clips of the agents already inside the scene (no white background). */
 export const LOOK_SCENE_VIDEO: Partial<Record<string, string>> = {
-  default: sv_default.url,
-  cyanSide: sv_cyanSide.url,
-  cyanJacket: sv_cyanJacket.url,
-  amberSide: sv_amberSide.url,
-  amberFront: sv_amberFront.url,
-  amberProfile: sv_amberProfile.url,
-  gold: sv_gold.url,
-  bob: sv_bob.url,
-  crystal: sv_crystal.url,
-  veil: sv_veil.url,
+  default: sv_default,
+  cyanSide: sv_cyanSide,
+  cyanJacket: sv_cyanJacket,
+  amberSide: sv_amberSide,
+  amberFront: sv_amberFront,
+  amberProfile: sv_amberProfile,
+  gold: sv_gold,
+  bob: sv_bob,
+  crystal: sv_crystal,
+  veil: sv_veil,
 };
 /** Same agents placed into AYRA's World night-city scene (white studio background replaced). */
 export const LOOK_SCENE: Record<AyraLook, string> = {
@@ -108,16 +108,16 @@ export const LOOK_SCENE: Record<AyraLook, string> = {
 };
 /** Each look's own motion clip (blinks, breathes, turns) — same outfit as the photo. */
 export const LOOK_VIDEO: Partial<Record<AyraLook, string>> = {
-  default: v_default.url,
-  cyanSide: v_cyanSide.url,
-  cyanJacket: v_cyanJacket.url,
-  amberSide: v_amberSide.url,
-  amberFront: v_amberFront.url,
-  amberProfile: v_amberProfile.url,
-  gold: v_gold.url,
-  bob: v_bob.url,
-  crystal: v_crystal.url,
-  veil: v_veil.url,
+  default: v_default,
+  cyanSide: v_cyanSide,
+  cyanJacket: v_cyanJacket,
+  amberSide: v_amberSide,
+  amberFront: v_amberFront,
+  amberProfile: v_amberProfile,
+  gold: v_gold,
+  bob: v_bob,
+  crystal: v_crystal,
+  veil: v_veil,
 };
 /** Per-look framing so every agent's face, neck and shoulders fit the screen. */
 const LOOK_FIT: Partial<Record<AyraLook, string>> = { default: "cover" };
@@ -321,7 +321,7 @@ export function JarvisCore({
             {clipVisible && (
               <video
                 ref={video}
-                src={ayraWalk.url}
+                src={ayraWalk}
                 poster={ayraCyanJacket}
                 muted
                 playsInline
