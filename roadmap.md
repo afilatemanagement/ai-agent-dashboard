@@ -13,4 +13,4 @@
 - [x] Voice: verify speech -> command flow, fix if broken
 - [x] Agent videos blend into scene (no white bg), proportions kept
 - [x] Upload complete project to new private GitHub repository; verify all 208 files
-- [ ] Reconnect GitHub as existing repository owner and upload complete latest project to smart-dashboard
+- [ ] Upload complete latest project to existing smart-dashboard repository — blocked: reconnect still authenticates afilatemanagement; GitHub confirms read-only access, requiring owner sign-in or Write collaborator access
