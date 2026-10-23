@@ -12,3 +12,5 @@
 - [x] Finish remaining reference match, summarize differences
 - [x] Voice: verify speech -> command flow, fix if broken
 - [x] Agent videos blend into scene (no white bg), proportions kept
+- [x] Upload complete project to new private GitHub repository; verify all 208 files
+- [ ] Reconnect GitHub as existing repository owner and upload complete latest project to smart-dashboard
