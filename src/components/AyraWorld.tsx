@@ -35,14 +35,14 @@ export function TopBar({ cmd, setCmd, onRun, listening, onMic, onTools, onSettin
       <div className="flex items-center gap-3 pl-4">
         <AyraMark className="h-14 w-14" />
         <div className="leading-none">
-          <div className="text-4xl font-bold tracking-wide">AYRA</div>
-          <div className="mt-1 text-base text-[color:var(--aw-cyan)]">by Software Vala™</div>
+          <div className="aw-display text-4xl font-bold tracking-wide">AYRA</div>
+          <div className="mt-1 text-base tracking-wide text-[color:var(--aw-cyan)]">by Software Vala™</div>
         </div>
       </div>
-      <div className="flex items-center gap-6 border-l border-[color:var(--aw-line)] px-8">
-        <button aria-label="Back" onClick={() => history.back()}><ArrowLeft className="h-6 w-6" /></button>
-        <button aria-label="Forward" onClick={() => history.forward()}><ArrowRight className="h-6 w-6" /></button>
-        <button aria-label="Reload" onClick={() => location.reload()}><RotateCw className="h-6 w-6" /></button>
+      <div className="flex items-center gap-2 border-l border-[color:var(--aw-line)] px-4">
+        <button aria-label="Back" onClick={() => history.back()} className="nav-btn"><ArrowLeft className="h-6 w-6" /></button>
+        <button aria-label="Forward" onClick={() => history.forward()} className="nav-btn"><ArrowRight className="h-6 w-6" /></button>
+        <button aria-label="Reload" onClick={() => location.reload()} className="nav-btn"><RotateCw className="h-6 w-6" /></button>
       </div>
       <div className="aw-cmd">
         <Sparkles className="h-6 w-6 text-[color:var(--aw-cyan)]" />
@@ -96,7 +96,7 @@ export function AgentStage({ core, look, setLook, reply, muted, micNote, micStat
       <div className="absolute left-5 top-4 flex items-center gap-3">
         <AyraMark className="h-11 w-11" />
         <div>
-          <div className="text-xl font-bold tracking-wide">AYRA'S WORLD</div>
+          <div className="aw-display text-xl font-bold tracking-wide">AYRA'S WORLD</div>
           <div className="text-sm text-[color:var(--aw-soft)]">Talk, Give Commands, Watch, and Work Together</div>
         </div>
       </div>
@@ -187,7 +187,7 @@ export function BrowserPanel({ onRun, reply, busy }: { onRun: (cmd: string) => v
     <section className="aw-panel flex min-h-0 flex-col p-3">
       <div className="flex items-center gap-4 px-2 pb-3">
         <div className="grid h-12 w-12 place-items-center rounded-full bg-[color:var(--aw-blue)]/20 ring-2 ring-[color:var(--aw-cyan)]"><RotateCw className="h-6 w-6 text-[color:var(--aw-cyan)]" /></div>
-        <div className="flex-1"><div className="text-xl font-bold">BROWSER</div><div className="text-xs text-[color:var(--aw-soft)]">AYRA will open, control, and work here for you</div></div>
+        <div className="flex-1"><div className="aw-display text-xl font-bold">BROWSER</div><div className="text-xs text-[color:var(--aw-soft)]">AYRA will open, control, and work here for you</div></div>
         {["Browser", "Automate", "Screenshot", "Download"].map((t) => (
           <button key={t} onClick={() => setTab(t)} className={`rounded-md px-3 py-2 text-[15px] ${tab === t ? "aw-tab-on" : ""}`}>{t}</button>
         ))}
@@ -263,7 +263,7 @@ export function ActivityPanel({ core, status }: { core: CoreState; status: strin
     <section className="aw-panel grid gap-3 p-3">
       <div className="grid grid-cols-[1.25fr_1fr] gap-3">
         <div>
-          <div className="mb-2 flex items-center gap-3 px-2 text-lg font-bold"><RotateCw className="h-6 w-6 text-[color:var(--aw-cyan)]" />AYRA ACTIVITY</div>
+          <div className="aw-display mb-2 flex items-center gap-3 px-2 text-lg font-bold"><RotateCw className="h-6 w-6 text-[color:var(--aw-cyan)]" />AYRA ACTIVITY</div>
           <div className="aw-glass flex items-center gap-4 px-6 py-3 text-xl font-semibold text-[color:var(--aw-cyan)]"><Send className="h-6 w-6" /><span className="truncate">{status}</span></div>
         </div>
         <div className="aw-glass flex gap-3 p-4">
