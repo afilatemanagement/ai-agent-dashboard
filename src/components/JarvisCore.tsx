@@ -44,6 +44,7 @@ import sv_gold from "@/assets/videos/scene-gold.mp4";
 import sv_bob from "@/assets/videos/scene-bob.mp4";
 import sv_crystal from "@/assets/videos/scene-crystal.mp4";
 import sv_veil from "@/assets/videos/scene-veil.mp4";
+import sv_headset from "@/assets/videos/scene-headset.mp4";
 import softwareValaLogo from "@/assets/software-vala-logo.png";
 import ayraNamaste from "@/assets/videos/ayra-namaste.mp4";
 import ayraWave from "@/assets/videos/ayra-wave.mp4";
@@ -100,6 +101,7 @@ export const LOOK_SCENE_VIDEO: Partial<Record<string, string>> = {
   bob: sv_bob,
   crystal: sv_crystal,
   veil: sv_veil,
+  headset: sv_headset,
 };
 /** Same agents placed into AYRA's World night-city scene (white studio background replaced). */
 export const LOOK_SCENE: Record<AyraLook, string> = {
