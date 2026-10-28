@@ -13,4 +13,5 @@
 - [x] Voice: verify speech -> command flow, fix if broken
 - [x] Agent videos blend into scene (no white bg), proportions kept
 - [x] Upload complete project to new private GitHub repository; verify all 208 files
+- [x] Push latest changes (Headset in-scene video, 4K quality upgrades, UI polish) to ayra-world-complete; verified all 210 files match
 - [ ] Upload complete latest project to existing smart-dashboard repository — blocked: reconnect still authenticates afilatemanagement; GitHub confirms read-only access, requiring owner sign-in or Write collaborator access
